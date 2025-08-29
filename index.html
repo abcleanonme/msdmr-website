@@ -269,6 +269,131 @@
             gap: 1rem;
         }
 
+        .net-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .net-card {
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid #27ae60;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .net-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+            border-left-color: #229954;
+        }
+
+        .net-card.emergency {
+            border-left-color: #e74c3c;
+        }
+
+        .net-card.emergency:hover {
+            border-left-color: #c0392b;
+        }
+
+        .net-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .net-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.3rem;
+        }
+
+        .net-type {
+            background: #27ae60;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .net-type.emergency {
+            background: #e74c3c;
+        }
+
+        .net-schedule {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+        }
+
+        .net-schedule-icon {
+            font-size: 1.2rem;
+            color: var(--btn-primary);
+        }
+
+        .net-schedule-text {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .net-frequency {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .net-tg {
+            background: var(--btn-primary);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .net-tg-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .net-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+        }
+
+        .net-next {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem;
+            background: rgba(39, 174, 96, 0.1);
+            border-radius: 6px;
+            color: #27ae60;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .net-next.emergency {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
         .talkgroup-card {
             background: var(--bg-color);
             border-radius: 8px;
@@ -560,6 +685,13 @@
             </div>
 
             <div class="resources-section">
+                <h2 class="resources-title">Net Schedule</h2>
+                <div id="netContainer">
+                    <!-- Net schedule will be loaded here -->
+                </div>
+            </div>
+
+            <div class="resources-section">
                 <h2 class="resources-title">DMR Talk Groups</h2>
                 <div id="talkgroupContainer">
                     <!-- Talk groups will be loaded here -->
@@ -672,6 +804,119 @@
 
         let map;
         let isMapMode = true;
+
+        // Net Schedule data
+        const nets = [
+            {
+                "id": "skywarn",
+                "name": "Mid-South SKYWARN Net",
+                "type": "Emergency",
+                "schedule": "1st day of each month at 7:00 PM CST",
+                "talkgroup": "314431",
+                "description": "Monthly severe weather preparedness net covering the Mid-South region. Focus on SKYWARN spotter training and severe weather communications.",
+                "recurring": "monthly",
+                "dayOfMonth": 1,
+                "time": "19:00",
+                "timezone": "CST"
+            },
+            {
+                "id": "midsouth",
+                "name": "Mid-South DMR Net",
+                "type": "General", 
+                "schedule": "Wednesdays at 7:30 PM CST",
+                "talkgroup": "31471",
+                "description": "Weekly general DMR net for the Mid-South area. Open discussion, check-ins, and DMR technical topics welcome.",
+                "recurring": "weekly",
+                "dayOfWeek": 3,
+                "time": "19:30",
+                "timezone": "CST"
+            }
+        ];
+
+        // Calculate next occurrence of a net
+        function getNextNetDate(net) {
+            const now = new Date();
+            let next = new Date();
+            
+            if (net.recurring === 'weekly') {
+                // Find next occurrence of the day of week
+                const daysUntilNext = (net.dayOfWeek - now.getDay() + 7) % 7;
+                next.setDate(now.getDate() + (daysUntilNext === 0 ? 7 : daysUntilNext));
+            } else if (net.recurring === 'monthly') {
+                // Find next first day of month
+                if (now.getDate() > net.dayOfMonth) {
+                    next.setMonth(now.getMonth() + 1);
+                }
+                next.setDate(net.dayOfMonth);
+            }
+            
+            const [hour, minute] = net.time.split(':');
+            next.setHours(parseInt(hour), parseInt(minute), 0, 0);
+            
+            // If the time has passed today, move to next occurrence
+            if (next <= now) {
+                if (net.recurring === 'weekly') {
+                    next.setDate(next.getDate() + 7);
+                } else if (net.recurring === 'monthly') {
+                    next.setMonth(next.getMonth() + 1);
+                }
+            }
+            
+            return next;
+        }
+
+        // Format date for display
+        function formatNetDate(date) {
+            return date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // Generate net schedule cards
+        function generateNetCards() {
+            const container = document.getElementById('netContainer');
+            const grid = document.createElement('div');
+            grid.className = 'net-grid';
+            
+            nets.forEach(net => {
+                const nextDate = getNextNetDate(net);
+                const card = document.createElement('div');
+                card.className = `net-card ${net.type.toLowerCase()}`;
+                
+                card.innerHTML = `
+                    <div class="net-header">
+                        <div>
+                            <div class="net-name">${net.name}</div>
+                        </div>
+                        <div class="net-type ${net.type.toLowerCase()}">${net.type}</div>
+                    </div>
+                    
+                    <div class="net-schedule">
+                        <span class="net-schedule-icon">📅</span>
+                        <span class="net-schedule-text">${net.schedule}</span>
+                    </div>
+                    
+                    <div class="net-frequency">
+                        <span class="net-tg-label">Talk Group:</span>
+                        <span class="net-tg">TG ${net.talkgroup}</span>
+                    </div>
+                    
+                    <div class="net-description">${net.description}</div>
+                    
+                    <div class="net-next ${net.type.toLowerCase()}">
+                        <span>📡</span>
+                        <span>Next: ${formatNetDate(nextDate)}</span>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            container.appendChild(grid);
+        }
 
         // Talk group data
         const talkgroups = [
@@ -899,6 +1144,7 @@
             initDarkMode();
             initMap();
             generateSimpleCards();
+            generateNetCards();
             generateTalkgroupCards();
         });
     </script>
