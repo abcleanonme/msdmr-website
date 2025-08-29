@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -26,354 +27,485 @@
             --shadow: rgba(0,0,0,0.1);
         }
 
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --bg-secondary: #2d2d2d;
-            --bg-tertiary: #3d3d3d;
-            --bg-highlight: #2c4a6b;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --text-light: #ffffff;
-            --border-color: #4a4a4a;
-            --header-bg: #1e3a4e;
-            --header-text: white;
-            --btn-primary: #4a90e2;
-            --btn-primary-hover: #357abd;
-            --btn-success: #2ecc71;
-            --btn-success-hover: #27ae60;
-            --btn-danger: #e74c3c;
-            --shadow: rgba(0,0,0,0.3);
-        }
+```
+    [data-theme="dark"] {
+        --bg-color: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --bg-tertiary: #3d3d3d;
+        --bg-highlight: #2c4a6b;
+        --text-primary: #e0e0e0;
+        --text-secondary: #b0b0b0;
+        --text-light: #ffffff;
+        --border-color: #4a4a4a;
+        --header-bg: #1e3a4e;
+        --header-text: white;
+        --btn-primary: #4a90e2;
+        --btn-primary-hover: #357abd;
+        --btn-success: #2ecc71;
+        --btn-success-hover: #27ae60;
+        --btn-danger: #e74c3c;
+        --shadow: rgba(0,0,0,0.3);
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: var(--text-primary);
-            background: var(--bg-color);
-            transition: all 0.3s ease;
-        }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background: var(--bg-color);
+        transition: all 0.3s ease;
+    }
 
-        /* Header Styles */
-        header {
-            background: var(--header-bg);
-            color: var(--header-text);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            box-shadow: 0 2px 10px var(--shadow);
-            transition: all 0.3s ease;
-        }
+    /* Header Styles */
+    header {
+        background: var(--header-bg);
+        color: var(--header-text);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1001;
+        box-shadow: 0 2px 10px var(--shadow);
+        transition: all 0.3s ease;
+    }
 
+    header.collapsed {
+        padding: 0.5rem 0;
+    }
+
+    @media (max-width: 768px) {
         header.collapsed {
-            padding: 0.5rem 0;
+            padding: 0.3rem 0;
         }
-
-        @media (max-width: 768px) {
-            header.collapsed {
-                padding: 0.3rem 0;
-            }
-            
-            header.collapsed .logo-container {
-                display: none;
-            }
-            
-            header.collapsed .controls {
-                width: 100%;
-                justify-content: center;
-                gap: 0.5rem;
-            }
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .controls {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .toggle-btn {
-            background: var(--btn-primary);
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .toggle-btn:hover {
-            background: var(--btn-primary-hover);
-            transform: translateY(-2px);
-        }
-
-        .toggle-btn.active {
-            background: var(--btn-danger);
-        }
-
-        .dark-mode-toggle {
-            background: transparent;
-            color: var(--header-text);
-            border: 2px solid var(--header-text);
-            padding: 0.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode-toggle:hover {
-            background: var(--header-text);
-            color: var(--header-bg);
-        }
-
-        /* Main Content */
-        main {
-            padding: 1rem 0;
-        }
-
-        #map {
-            height: 500px;
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        .leaflet-control-container {
-            z-index: 999 !important;
-        }
-
-        .leaflet-bottom.leaflet-right {
-            z-index: 999 !important;
-        }
-
-        /* Compact Mode Styles */
-        .compact-mode {
+        
+        header.collapsed .logo-container {
             display: none;
         }
-
-        .compact-container {
-            max-width: 100%;
+        
+        header.collapsed .controls {
             width: 100%;
-            padding: 0 10px;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .toggle-btn {
+        background: var(--btn-primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+        background: var(--btn-primary-hover);
+        transform: translateY(-2px);
+    }
+
+    .toggle-btn.active {
+        background: var(--btn-danger);
+    }
+
+    .dark-mode-toggle {
+        background: transparent;
+        color: var(--header-text);
+        border: 2px solid var(--header-text);
+        padding: 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.3s ease;
+    }
+
+    .dark-mode-toggle:hover {
+        background: var(--header-text);
+        color: var(--header-bg);
+    }
+
+    /* Main Content */
+    main {
+        padding: 1rem 0;
+    }
+
+    #map {
+        height: 500px;
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px var(--shadow);
+    }
+
+    .leaflet-control-container {
+        z-index: 999 !important;
+    }
+
+    .leaflet-bottom.leaflet-right {
+        z-index: 999 !important;
+    }
+
+    /* Compact Mode Styles */
+    .compact-mode {
+        display: none;
+    }
+
+    .compact-container {
+        max-width: 100%;
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .compact-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -10px;
+        padding: 0 10px;
+    }
+
+    .compact-table {
+        width: 100%;
+        min-width: 600px;
+        border-collapse: collapse;
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px var(--shadow);
+        margin-bottom: 2rem;
+    }
+
+    .compact-table th {
+        background: var(--bg-tertiary);
+        padding: 0.8rem 0.6rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-light);
+        border-bottom: 2px solid var(--border-color);
+        font-size: 0.9rem;
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .compact-table td {
+        padding: 0.8rem 0.6rem;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.85rem;
+        vertical-align: top;
+    }
+
+    .compact-table tr:hover {
+        background: var(--bg-highlight);
+    }
+
+    .compact-callsign {
+        font-weight: 600;
+        color: var(--text-light);
+        font-family: 'SF Mono', 'Monaco', monospace;
+        font-size: 0.9rem;
+    }
+
+    .compact-frequency {
+        font-family: 'SF Mono', 'Monaco', monospace;
+        color: var(--btn-primary);
+        font-weight: 500;
+        font-size: 0.8rem;
+    }
+
+    .compact-status {
+        padding: 0.3rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #27ae60;
+        color: white;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .compact-links {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+
+    .compact-link {
+        background: var(--btn-primary);
+        color: white;
+        text-decoration: none;
+        padding: 0.3rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        min-width: 32px;
+        text-align: center;
+    }
+
+    .compact-link:hover {
+        background: var(--btn-primary-hover);
+    }
+
+    .compact-tg {
+        font-family: 'SF Mono', 'Monaco', monospace;
+        font-weight: 600;
+        color: var(--btn-primary);
+        font-size: 0.85rem;
+    }
+
+    .compact-description {
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+        .compact-container {
+            padding: 0 5px;
+        }
+
+        .compact-table-wrapper {
+            margin: 0 -5px;
+            padding: 0 5px;
         }
 
         .compact-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px var(--shadow);
-            margin-bottom: 2rem;
+            min-width: 800px;
+            font-size: 0.8rem;
+        }
+        
+        .compact-table th,
+        .compact-table td {
+            padding: 0.6rem 0.4rem;
         }
 
         .compact-table th {
-            background: var(--bg-tertiary);
-            padding: 0.8rem 0.6rem;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-light);
-            border-bottom: 2px solid var(--border-color);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .compact-table td {
-            padding: 0.6rem 0.6rem;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.8rem;
-            vertical-align: top;
-        }
-
-        .compact-table tr:hover {
-            background: var(--bg-highlight);
+            font-size: 0.75rem;
         }
 
         .compact-callsign {
-            font-weight: 600;
-            color: var(--text-light);
-            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 0.8rem;
         }
 
         .compact-frequency {
-            font-family: 'SF Mono', 'Monaco', monospace;
-            color: var(--btn-primary);
-            font-weight: 500;
-        }
-
-        .compact-status {
-            padding: 0.2rem 0.5rem;
-            border-radius: 12px;
             font-size: 0.7rem;
-            font-weight: 600;
-            background: #27ae60;
-            color: white;
-        }
-
-        .compact-links {
-            display: flex;
-            gap: 0.3rem;
-        }
-
-        .compact-link {
-            background: var(--btn-primary);
-            color: white;
-            text-decoration: none;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-size: 0.7rem;
-            transition: all 0.3s ease;
-        }
-
-        .compact-link:hover {
-            background: var(--btn-primary-hover);
         }
 
         .compact-tg {
-            font-family: 'SF Mono', 'Monaco', monospace;
-            font-weight: 600;
-            color: var(--btn-primary);
+            font-size: 0.75rem;
         }
 
-        /* Section Styles */
-        .section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px var(--shadow);
-            margin-bottom: 2rem;
-            overflow: hidden;
+        .compact-status {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.4rem;
+        }
+
+        .compact-link {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.4rem;
+            min-width: 28px;
+        }
+
+        .compact-description {
+            max-width: 180px;
+        }
+
+        #map {
+            height: 350px;
         }
 
         .section-header {
-            padding: 1rem 1.5rem;
-            background: var(--bg-tertiary);
-            cursor: pointer;
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            user-select: none;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .section-header:hover {
-            background: var(--bg-highlight);
-        }
-
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-light);
-            flex: 1;
-        }
-
-        .section-toggle {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .section-toggle.collapsed {
-            transform: rotate(-90deg);
+            padding: 0.8rem 1rem;
         }
 
         .section-content {
-            padding: 1.5rem;
-            transition: all 0.3s ease;
+            padding: 1rem;
         }
 
-        .section-content.collapsed {
-            display: none;
-        }
-
-        /* Map Mode Styles */
-        .resource-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .resource-card {
-            background: var(--bg-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .resource-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px var(--shadow);
-        }
-
-        .resource-title {
+        .section-title {
             font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .compact-table {
+            min-width: 900px;
         }
 
-        .resource-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+        .compact-container {
+            padding: 0 2px;
         }
 
-        .resource-link {
-            display: inline-block;
-            background: var(--btn-success);
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s ease;
+        .compact-table-wrapper {
+            margin: 0 -2px;
+            padding: 0 2px;
         }
 
-        .resource-link:hover {
-            background: var(--btn-success-hover);
-            transform: translateY(-1px);
+        #map {
+            height: 300px;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .compact-table {
-                font-size: 0.7rem;
-            }
-            
-            .compact-table th,
-            .compact-table td {
-                padding: 0.4rem 0.3rem;
-            }
-            
-            #map {
-                height: 400px;
-            }
+        .section-header {
+            padding: 0.6rem 0.8rem;
         }
 
-        .hidden {
-            display: none !important;
+        .section-content {
+            padding: 0.8rem;
         }
-    </style>
+    }
+
+    /* Section Styles */
+    .section {
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px var(--shadow);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .section-header {
+        padding: 1rem 1.5rem;
+        background: var(--bg-tertiary);
+        cursor: pointer;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        user-select: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header:hover {
+        background: var(--bg-highlight);
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-light);
+        flex: 1;
+    }
+
+    .section-toggle {
+        font-size: 1.2rem;
+        transition: transform 0.3s ease;
+    }
+
+    .section-toggle.collapsed {
+        transform: rotate(-90deg);
+    }
+
+    .section-content {
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .section-content.collapsed {
+        display: none;
+    }
+
+    /* Map Mode Styles */
+    .resource-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .resource-card {
+        background: var(--bg-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .resource-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    .resource-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-light);
+        margin-bottom: 0.5rem;
+    }
+
+    .resource-desc {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .resource-link {
+        display: inline-block;
+        background: var(--btn-success);
+        color: white;
+        text-decoration: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .resource-link:hover {
+        background: var(--btn-success-hover);
+        transform: translateY(-1px);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .compact-table {
+            font-size: 0.7rem;
+        }
+        
+        .compact-table th,
+        .compact-table td {
+            padding: 0.4rem 0.3rem;
+        }
+        
+        #map {
+            height: 400px;
+        }
+    }
+
+    .hidden {
+        display: none !important;
+    }
+</style>
+```
+
 </head>
 <body>
     <header>
@@ -396,65 +528,67 @@
                           }
                         </style>
                       </defs>
-                      
-                      <g transform="translate(30,30)">
-                        <circle cx="0" cy="0" r="20" fill="none" stroke="rgba(204, 41, 54, 0.3)" stroke-width="1"/>
-                        <g fill="#CC2936">
-                          <rect x="-0.5" y="-12" width="1" height="24" rx="0.5"/>
-                          <rect x="-5" y="-15" width="10" height="1.5" rx="0.5"/>
-                          <rect x="-3" y="-6" width="6" height="1" rx="0.5"/>
-                          <rect x="-3" y="6" width="6" height="1" rx="0.5"/>
-                        </g>
-                        
-                        <g fill="none" stroke-width="1" opacity="0.7">
-                          <path d="M 6,-12 Q 12,-18 18,-12" stroke="#CC2936"/>
-                          <path d="M 10,-12 Q 18,-22 26,-12" stroke="#FFD23F"/>
-                          <path d="M 14,-12 Q 24,-26 34,-12" stroke="#2E86AB"/>
-                        </g>
-                      </g>
-                      
-                      <text x="70" y="35" class="title-text" font-size="18">
-                        North Mississippi DMR Network
-                      </text>
-                      
-                      <line x1="70" y1="42" x2="160" y2="42" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
-                      
-                      <g transform="translate(70, 52)">
-                        <text class="small-text" font-size="8">UHF/VHF</text>
-                        <text x="45" class="small-text" font-size="8">DMR</text>
-                      </g>
-                      
-                      <g transform="translate(380, 20)">
-                        <rect x="0" y="0" width="55" height="16" rx="8" fill="rgba(46, 134, 171, 0.2)" stroke="#2E86AB" stroke-width="1"/>
-                        <text x="27.5" y="11" class="small-text" font-size="8" font-weight="600" fill="#2E86AB" text-anchor="middle">
-                          DIGITAL
-                        </text>
-                      </g>
-                    </svg>
-                </div>
-                <div class="controls">
-                    <button id="modeToggle" class="toggle-btn">Compact Mode</button>
-                    <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
-                </div>
+
+```
+                  <g transform="translate(30,30)">
+                    <circle cx="0" cy="0" r="20" fill="none" stroke="rgba(204, 41, 54, 0.3)" stroke-width="1"/>
+                    <g fill="#CC2936">
+                      <rect x="-0.5" y="-12" width="1" height="24" rx="0.5"/>
+                      <rect x="-5" y="-15" width="10" height="1.5" rx="0.5"/>
+                      <rect x="-3" y="-6" width="6" height="1" rx="0.5"/>
+                      <rect x="-3" y="6" width="6" height="1" rx="0.5"/>
+                    </g>
+                    
+                    <g fill="none" stroke-width="1" opacity="0.7">
+                      <path d="M 6,-12 Q 12,-18 18,-12" stroke="#CC2936"/>
+                      <path d="M 10,-12 Q 18,-22 26,-12" stroke="#FFD23F"/>
+                      <path d="M 14,-12 Q 24,-26 34,-12" stroke="#2E86AB"/>
+                    </g>
+                  </g>
+                  
+                  <text x="70" y="35" class="title-text" font-size="18">
+                    North Mississippi DMR Network
+                  </text>
+                  
+                  <line x1="70" y1="42" x2="160" y2="42" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                  
+                  <g transform="translate(70, 52)">
+                    <text class="small-text" font-size="8">UHF/VHF</text>
+                    <text x="45" class="small-text" font-size="8">DMR</text>
+                  </g>
+                  
+                  <g transform="translate(380, 20)">
+                    <rect x="0" y="0" width="55" height="16" rx="8" fill="rgba(46, 134, 171, 0.2)" stroke="#2E86AB" stroke-width="1"/>
+                    <text x="27.5" y="11" class="small-text" font-size="8" font-weight="600" fill="#2E86AB" text-anchor="middle">
+                      DIGITAL
+                    </text>
+                  </g>
+                </svg>
+            </div>
+            <div class="controls">
+                <button id="modeToggle" class="toggle-btn">Compact Mode</button>
+                <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <main>
-        <!-- Map Mode -->
-        <div id="mapMode" class="container">
-            <div id="map"></div>
-        </div>
+<main>
+    <!-- Map Mode -->
+    <div id="mapMode" class="container">
+        <div id="map"></div>
+    </div>
 
-        <!-- Compact Mode -->
-        <div id="compactMode" class="compact-mode">
-            <div class="compact-container">
-                <div class="section">
-                    <div class="section-header" onclick="toggleSection('repeatersSection')">
-                        <h2 class="section-title">DMR Repeaters</h2>
-                        <span class="section-toggle">🔽</span>
-                    </div>
-                    <div id="repeatersSection" class="section-content">
+    <!-- Compact Mode -->
+    <div id="compactMode" class="compact-mode">
+        <div class="compact-container">
+            <div class="section">
+                <div class="section-header" onclick="toggleSection('repeatersSection')">
+                    <h2 class="section-title">DMR Repeaters</h2>
+                    <span class="section-toggle">🔽</span>
+                </div>
+                <div id="repeatersSection" class="section-content">
+                    <div class="compact-table-wrapper">
                         <table class="compact-table" id="repeatersTable">
                             <thead>
                                 <tr>
@@ -472,13 +606,15 @@
                         </table>
                     </div>
                 </div>
+            </div>
 
-                <div class="section">
-                    <div class="section-header" onclick="toggleSection('netsSection')">
-                        <h2 class="section-title">Net Schedule</h2>
-                        <span class="section-toggle">🔽</span>
-                    </div>
-                    <div id="netsSection" class="section-content">
+            <div class="section">
+                <div class="section-header" onclick="toggleSection('netsSection')">
+                    <h2 class="section-title">Net Schedule</h2>
+                    <span class="section-toggle">🔽</span>
+                </div>
+                <div id="netsSection" class="section-content">
+                    <div class="compact-table-wrapper">
                         <table class="compact-table" id="netsTable">
                             <thead>
                                 <tr>
@@ -494,13 +630,15 @@
                         </table>
                     </div>
                 </div>
+            </div>
 
-                <div class="section">
-                    <div class="section-header" onclick="toggleSection('talkgroupsSection')">
-                        <h2 class="section-title">Talk Groups</h2>
-                        <span class="section-toggle">🔽</span>
-                    </div>
-                    <div id="talkgroupsSection" class="section-content">
+            <div class="section">
+                <div class="section-header" onclick="toggleSection('talkgroupsSection')">
+                    <h2 class="section-title">Talk Groups</h2>
+                    <span class="section-toggle">🔽</span>
+                </div>
+                <div id="talkgroupsSection" class="section-content">
+                    <div class="compact-table-wrapper">
                         <table class="compact-table" id="talkgroupsTable">
                             <thead>
                                 <tr>
@@ -518,544 +656,547 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Resources Section (shown in both modes) -->
-        <div class="container">
-            <div class="section">
-                <div class="section-header" onclick="toggleSection('resourcesSection')">
-                    <h2 class="section-title">Essential DMR Resources</h2>
-                    <span class="section-toggle">🔽</span>
-                </div>
-                <div id="resourcesSection" class="section-content">
-                    <div class="resource-grid" id="resourcesGrid">
-                    </div>
+    <!-- Resources Section (shown in both modes) -->
+    <div class="container">
+        <div class="section">
+            <div class="section-header" onclick="toggleSection('resourcesSection')">
+                <h2 class="section-title">Essential DMR Resources</h2>
+                <span class="section-toggle">🔽</span>
+            </div>
+            <div id="resourcesSection" class="section-content">
+                <div class="resource-grid" id="resourcesGrid">
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // Application State
-        let isMapMode = true;
-        let map;
-        let appData = {
-            repeaters: [],
-            talkgroups: [],
-            nets: [],
-            resources: []
-        };
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Application State
+    let isMapMode = true;
+    let map;
+    let appData = {
+        repeaters: [],
+        talkgroups: [],
+        nets: [],
+        resources: []
+    };
 
-        // Data Loading Module
-        const DataLoader = {
-            async loadJSON(url) {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return await response.json();
-                } catch (error) {
-                    console.warn(`Failed to load ${url}, using fallback data:`, error);
-                    return null;
-                }
-            },
-
-            async loadAllData() {
-                // Try to load from JSON files, fallback to embedded data
-                const [repeatersData, talkgroupsData, netsData, resourcesData] = await Promise.all([
-                    this.loadJSON('repeaters.json'),
-                    this.loadJSON('talkgroups.json'),
-                    this.loadJSON('nets.json'),
-                    this.loadJSON('resources.json')
-                ]);
-
-                // Use loaded data or fallbacks
-                appData.repeaters = repeatersData?.repeaters || this.getFallbackRepeaters();
-                appData.talkgroups = talkgroupsData?.talkgroups || this.getFallbackTalkgroups();
-                appData.nets = netsData?.nets || this.getFallbackNets();
-                appData.resources = resourcesData?.resources || this.getFallbackResources();
-            },
-
-            getFallbackRepeaters() {
-                return [
-                    {
-                        "id": 1,
-                        "callsign": "N5VGK",
-                        "frequency": "444.950 MHz (+5 MHz)",
-                        "colorCode": "1",
-                        "location": "Tupelo",
-                        "county": "Lee, MS",
-                        "lat": 34.25759888,
-                        "lng": -88.70339966,
-                        "description": "Primary DMR repeater serving the Tupelo area",
-                        "status": "On-Air",
-                        "lastUpdate": "2025-06-12",
-                        "bmId": "310974",
-                    },
-                    {
-                        "id": 2,
-                        "callsign": "KI5CMA",
-                        "frequency": "444.425 MHz (+5 MHz)",
-                        "colorCode": "1",
-                        "location": "Oxford - Thacker Mountain",
-                        "county": "Lafayette, MS",
-                        "lat": 34.32809830,
-                        "lng": -89.57929993,
-                        "description": "DMR repeater serving Oxford and University area",
-                        "status": "On-Air",
-                        "lastUpdate": "2025-08-27",
-                        "bmId": "314649",
-                        "rbId": "18132"
-                    },
-                    {
-                        "id": 3,
-                        "callsign": "KG5JDS",
-                        "frequency": "146.835 MHz (-0.6 MHz)",
-                        "colorCode": "1",
-                        "location": "Pontotoc - Water Tower",
-                        "county": "Pontotoc, MS",
-                        "lat": 34.24789810,
-                        "lng": -88.99870300,
-                        "description": "2-meter DMR repeater serving Pontotoc area",
-                        "status": "On-Air",
-                        "lastUpdate": "2025-08-27",
-                        "bmId": "314627",
-                        "rbId": "93"
-                    },
-                    {
-                        "id": 4,
-                        "callsign": "N5VGK",
-                        "frequency": "442.075 MHz (+5 MHz)",
-                        "colorCode": "1",
-                        "location": "Pickwick/Counce",
-                        "county": "Hardin, TN",
-                        "lat": 35.0614,
-                        "lng": -88.2034,
-                        "description": "DMR repeater serving Pickwick Dam area",
-                        "status": "On-Air",
-                        "lastUpdate": "2025-08-27",
-                        "bmId": "314620",
-                        "rbId": "23841"
-                    }
-                ];
-            },
-
-            getFallbackTalkgroups() {
-                return [
-                    {
-                        "id": "31285",
-                        "name": "Northeast Mississippi",
-                        "description": "Regional communications for northeast Mississippi including Corinth, Tupelo, Amory, Oxford, New Albany, Starkville and surrounding areas.",
-                        "type": "Regional",
-                        "timeslot": "1 or 2",
-                        "status": "Static on local repeaters"
-                    },
-                    {
-                        "id": "3128",
-                        "name": "Mississippi Statewide",
-                        "description": "Mississippi statewide communications. Use for short conversations and as a calling channel.",
-                        "type": "Statewide",
-                        "timeslot": "1 or 2",
-                        "status": "Dynamic"
-                    },
-                    {
-                        "id": "93",
-                        "name": "North America",
-                        "description": "Continental North America talkgroup. All North American stations welcome.",
-                        "type": "Continental",
-                        "timeslot": "1 or 2",
-                        "status": "Dynamic"
-                    },
-                    {
-                        "id": "91",
-                        "name": "Worldwide",
-                        "description": "Global communications talkgroup. Very active with stations from around the world.",
-                        "type": "Worldwide",
-                        "timeslot": "1 or 2",
-                        "status": "Dynamic"
-                    },
-                    {
-                        "id": "9990",
-                        "name": "Parrot (Echo Test)",
-                        "description": "Echo test service - make a PRIVATE call to 9990 to test your audio and connection.",
-                        "type": "Service",
-                        "timeslot": "1 or 2",
-                        "status": "Private Call",
-                        "note": "Configure as PRIVATE CALL, not Group Call"
-                    }
-                ];
-            },
-
-            getFallbackNets() {
-                return [
-                    {
-                        "id": "skywarn",
-                        "name": "Mid-South SKYWARN Net",
-                        "type": "Emergency",
-                        "schedule": "1st day of each month at 7:00 PM CST",
-                        "talkgroup": "314431",
-                        "description": "Monthly severe weather preparedness net covering the Mid-South region.",
-                        "recurring": "monthly",
-                        "dayOfMonth": 1,
-                        "time": "19:00",
-                        "timezone": "CST"
-                    },
-                    {
-                        "id": "midsouth",
-                        "name": "Mid-South DMR Net",
-                        "type": "General",
-                        "schedule": "Wednesdays at 7:30 PM CST",
-                        "talkgroup": "31471",
-                        "description": "Weekly general DMR net for the Mid-South area.",
-                        "recurring": "weekly",
-                        "dayOfWeek": 3,
-                        "time": "19:30",
-                        "timezone": "CST"
-                    }
-                ];
-            },
-
-            getFallbackResources() {
-                return [
-                    {
-                        "id": "brandmeister",
-                        "title": "Brandmeister",
-                        "description": "Global DMR network dashboard and management",
-                        "url": "https://brandmeister.network/"
-                    },
-                    {
-                        "id": "hoseline",
-                        "title": "Brandmeister Hoseline",
-                        "description": "Live audio stream of DMR network activity",
-                        "url": "https://hose.brandmeister.network/"
-                    },
-                    {
-                        "id": "repeaterbook",
-                        "title": "RepeaterBook",
-                        "description": "Comprehensive repeater database and information",
-                        "url": "https://www.repeaterbook.com/"
-                    },
-                    {
-                        "id": "aprs",
-                        "title": "APRS.fi",
-                        "description": "APRS tracking and real-time position reporting",
-                        "url": "https://aprs.fi/"
-                    },
-                    {
-                        "id": "dmrid",
-                        "title": "DMR-ID Database",
-                        "description": "Register and lookup DMR radio IDs",
-                        "url": "https://radioid.net/"
-                    },
-                    {
-                        "id": "arrl",
-                        "title": "ARRL",
-                        "description": "American Radio Relay League resources",
-                        "url": "https://www.arrl.org/"
-                    }
-                ];
-            }
-        };
-
-        // Map Module
-        const MapModule = {
-            init() {
-                map = L.map('map').setView([34.4, -88.8], 8);
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
-
-                this.addRepeaterMarkers();
-            },
-
-            addRepeaterMarkers() {
-                appData.repeaters.forEach(repeater => {
-                    const marker = L.marker([repeater.lat, repeater.lng]).addTo(map);
-                    
-                    const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
-                    const stateId = repeater.county.includes('TN') ? '47' : '28';
-                    const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${stateId}&ID=${repeater.rbId}`;
-                    
-                    const popupContent = `
-                        <div style="font-family: inherit;">
-                            <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: #2c3e50;">
-                                ${repeater.callsign} - ${repeater.location}
-                            </div>
-                            <div style="margin: 0.5rem 0;">
-                                <strong>Frequency:</strong> ${repeater.frequency}<br>
-                                <strong>County:</strong> ${repeater.county}<br>
-                                <strong>Color Code:</strong> ${repeater.colorCode}<br>
-                                <strong>Status:</strong> ${repeater.status}<br>
-                                <strong>Last Update:</strong> ${repeater.lastUpdate}<br>
-                                <strong>Description:</strong> ${repeater.description}
-                            </div>
-                            <div style="margin-top: 0.8rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                <a href="${bmLink}" target="_blank" style="background: #3498db; color: white; text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">Brandmeister</a>
-                                <a href="${rbLink}" target="_blank" style="background: #3498db; color: white; text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">RepeaterBook</a>
-                            </div>
-                        </div>
-                    `;
-                    
-                    marker.bindPopup(popupContent);
-                });
-            }
-        };
-
-        // Compact Mode Module
-        const CompactModule = {
-            renderRepeaters() {
-                const tbody = document.getElementById('repeatersTableBody');
-                tbody.innerHTML = '';
-                
-                appData.repeaters.forEach(repeater => {
-                    const stateId = repeater.county.includes('TN') ? '47' : '28';
-                    const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
-                    const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${stateId}&ID=${repeater.rbId}`;
-                    
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><span class="compact-callsign">${repeater.callsign}</span></td>
-                        <td>${repeater.location}</td>
-                        <td><span class="compact-frequency">${repeater.frequency}</span></td>
-                        <td>${repeater.colorCode}</td>
-                        <td><span class="compact-status">${repeater.status}</span></td>
-                        <td class="compact-tg">${repeater.bmId}</td>
-                        <td>
-                            <div class="compact-links">
-                                <a href="${bmLink}" target="_blank" class="compact-link">BM</a>
-                                <a href="${rbLink}" target="_blank" class="compact-link">RB</a>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            },
-
-            renderNets() {
-                const tbody = document.getElementById('netsTableBody');
-                tbody.innerHTML = '';
-                
-                appData.nets.forEach(net => {
-                    const nextDate = this.getNextNetDate(net);
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td><strong>${net.name}</strong></td>
-                        <td class="compact-tg">TG ${net.talkgroup}</td>
-                        <td>${net.schedule}</td>
-                        <td><span class="compact-status" style="background: ${net.type === 'Emergency' ? '#e74c3c' : '#27ae60'}">${net.type}</span></td>
-                        <td>${this.formatDate(nextDate)}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            },
-
-            renderTalkgroups() {
-                const tbody = document.getElementById('talkgroupsTableBody');
-                tbody.innerHTML = '';
-                
-                appData.talkgroups.forEach(tg => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="compact-tg">TG ${tg.id}</td>
-                        <td><strong>${tg.name}</strong></td>
-                        <td><span class="compact-status" style="background: ${this.getTypeColor(tg.type)}">${tg.type}</span></td>
-                        <td>${tg.status}</td>
-                        <td style="max-width: 300px;">${tg.description}</td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            },
-
-            getTypeColor(type) {
-                const colors = {
-                    'Regional': '#3498db',
-                    'Statewide': '#2ecc71',
-                    'Continental': '#f39c12',
-                    'Worldwide': '#9b59b6',
-                    'Service': '#e74c3c'
-                };
-                return colors[type] || '#95a5a6';
-            },
-
-            getNextNetDate(net) {
-                const now = new Date();
-                let next = new Date();
-                
-                if (net.recurring === 'weekly') {
-                    const daysUntilNext = (net.dayOfWeek - now.getDay() + 7) % 7;
-                    next.setDate(now.getDate() + (daysUntilNext === 0 ? 7 : daysUntilNext));
-                } else if (net.recurring === 'monthly') {
-                    if (now.getDate() > net.dayOfMonth) {
-                        next.setMonth(now.getMonth() + 1);
-                    }
-                    next.setDate(net.dayOfMonth);
-                }
-                
-                const [hour, minute] = net.time.split(':');
-                next.setHours(parseInt(hour), parseInt(minute), 0, 0);
-                
-                if (next <= now) {
-                    if (net.recurring === 'weekly') {
-                        next.setDate(next.getDate() + 7);
-                    } else if (net.recurring === 'monthly') {
-                        next.setMonth(next.getMonth() + 1);
-                    }
-                }
-                
-                return next;
-            },
-
-            formatDate(date) {
-                return date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric'
-                });
-            }
-        };
-
-        // Resources Module
-        const ResourcesModule = {
-            render() {
-                const grid = document.getElementById('resourcesGrid');
-                grid.innerHTML = '';
-                
-                appData.resources.forEach(resource => {
-                    const card = document.createElement('div');
-                    card.className = 'resource-card';
-                    card.innerHTML = `
-                        <div class="resource-title">${resource.title}</div>
-                        <div class="resource-desc">${resource.description}</div>
-                        <a href="${resource.url}" class="resource-link" target="_blank">Visit Site</a>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-        };
-
-        // UI Module
-        const UIModule = {
-            init() {
-                this.setupModeToggle();
-                this.setupDarkMode();
-                this.setupScrollBehavior();
-                this.restoreSectionStates();
-            },
-
-            setupModeToggle() {
-                document.getElementById('modeToggle').addEventListener('click', () => {
-                    const mapMode = document.getElementById('mapMode');
-                    const compactMode = document.getElementById('compactMode');
-                    const toggleBtn = document.getElementById('modeToggle');
-
-                    if (isMapMode) {
-                        // Switch to compact mode
-                        mapMode.classList.add('hidden');
-                        compactMode.classList.remove('hidden');
-                        compactMode.style.display = 'block';
-                        toggleBtn.textContent = 'Map Mode';
-                        toggleBtn.classList.add('active');
-                        isMapMode = false;
-                    } else {
-                        // Switch to map mode
-                        mapMode.classList.remove('hidden');
-                        compactMode.classList.add('hidden');
-                        compactMode.style.display = 'none';
-                        toggleBtn.textContent = 'Compact Mode';
-                        toggleBtn.classList.remove('active');
-                        isMapMode = true;
-                        
-                        if (map) {
-                            setTimeout(() => {
-                                map.invalidateSize();
-                            }, 100);
-                        }
-                    }
-                });
-            },
-
-            setupDarkMode() {
-                const darkModeToggle = document.getElementById('darkModeToggle');
-                const savedTheme = localStorage.getItem('theme') || 'light';
-                
-                document.documentElement.setAttribute('data-theme', savedTheme);
-                this.updateDarkModeIcon(savedTheme);
-                
-                darkModeToggle.addEventListener('click', () => {
-                    const currentTheme = document.documentElement.getAttribute('data-theme');
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    
-                    document.documentElement.setAttribute('data-theme', newTheme);
-                    localStorage.setItem('theme', newTheme);
-                    this.updateDarkModeIcon(newTheme);
-                });
-            },
-
-            updateDarkModeIcon(theme) {
-                const darkModeToggle = document.getElementById('darkModeToggle');
-                darkModeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-            },
-
-            setupScrollBehavior() {
-                const header = document.querySelector('header');
-                
-                window.addEventListener('scroll', () => {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    
-                    if (scrollTop > 100) {
-                        header.classList.add('collapsed');
-                    } else {
-                        header.classList.remove('collapsed');
-                    }
-                });
-            },
-
-            restoreSectionStates() {
-                ['repeatersSection', 'netsSection', 'talkgroupsSection', 'resourcesSection'].forEach(sectionId => {
-                    const state = localStorage.getItem(`section-${sectionId}`);
-                    if (state === 'collapsed') {
-                        const section = document.getElementById(sectionId);
-                        const toggle = section.parentElement.querySelector('.section-toggle');
-                        section.classList.add('collapsed');
-                        toggle.classList.add('collapsed');
-                    }
-                });
-            }
-        };
-
-        // Global Functions
-        function toggleSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            const toggle = section.parentElement.querySelector('.section-toggle');
-            
-            section.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
-            
-            const isCollapsed = section.classList.contains('collapsed');
-            localStorage.setItem(`section-${sectionId}`, isCollapsed ? 'collapsed' : 'expanded');
-        }
-
-        // Application Initialization
-        async function initApp() {
+    // Data Loading Module
+    const DataLoader = {
+        async loadJSON(url) {
             try {
-                await DataLoader.loadAllData();
-                
-                MapModule.init();
-                CompactModule.renderRepeaters();
-                CompactModule.renderNets();
-                CompactModule.renderTalkgroups();
-                ResourcesModule.render();
-                UIModule.init();
-                
-                console.log('North Mississippi DMR Network loaded successfully');
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
             } catch (error) {
-                console.error('Failed to initialize app:', error);
+                console.warn(`Failed to load ${url}, using fallback data:`, error);
+                return null;
             }
-        }
+        },
 
-        // Start the application
-        document.addEventListener('DOMContentLoaded', initApp);
-    </script>
+        async loadAllData() {
+            // Try to load from JSON files, fallback to embedded data
+            const [repeatersData, talkgroupsData, netsData, resourcesData] = await Promise.all([
+                this.loadJSON('repeaters.json'),
+                this.loadJSON('talkgroups.json'),
+                this.loadJSON('nets.json'),
+                this.loadJSON('resources.json')
+            ]);
+
+            // Use loaded data or fallbacks
+            appData.repeaters = repeatersData?.repeaters || this.getFallbackRepeaters();
+            appData.talkgroups = talkgroupsData?.talkgroups || this.getFallbackTalkgroups();
+            appData.nets = netsData?.nets || this.getFallbackNets();
+            appData.resources = resourcesData?.resources || this.getFallbackResources();
+        },
+
+        getFallbackRepeaters() {
+            return [
+                {
+                    "id": 1,
+                    "callsign": "N5VGK",
+                    "frequency": "444.950 MHz (+5 MHz)",
+                    "colorCode": "1",
+                    "location": "Tupelo",
+                    "county": "Lee, MS",
+                    "lat": 34.25759888,
+                    "lng": -88.70339966,
+                    "description": "Primary DMR repeater serving the Tupelo area",
+                    "status": "On-Air",
+                    "lastUpdate": "2025-06-12",
+                    "bmId": "310974",
+                },
+                {
+                    "id": 2,
+                    "callsign": "KI5CMA",
+                    "frequency": "444.425 MHz (+5 MHz)",
+                    "colorCode": "1",
+                    "location": "Oxford - Thacker Mountain",
+                    "county": "Lafayette, MS",
+                    "lat": 34.32809830,
+                    "lng": -89.57929993,
+                    "description": "DMR repeater serving Oxford and University area",
+                    "status": "On-Air",
+                    "lastUpdate": "2025-08-27",
+                    "bmId": "314649",
+                    "rbId": "18132"
+                },
+                {
+                    "id": 3,
+                    "callsign": "KG5JDS",
+                    "frequency": "146.835 MHz (-0.6 MHz)",
+                    "colorCode": "1",
+                    "location": "Pontotoc - Water Tower",
+                    "county": "Pontotoc, MS",
+                    "lat": 34.24789810,
+                    "lng": -88.99870300,
+                    "description": "2-meter DMR repeater serving Pontotoc area",
+                    "status": "On-Air",
+                    "lastUpdate": "2025-08-27",
+                    "bmId": "314627",
+                    "rbId": "93"
+                },
+                {
+                    "id": 4,
+                    "callsign": "N5VGK",
+                    "frequency": "442.075 MHz (+5 MHz)",
+                    "colorCode": "1",
+                    "location": "Pickwick/Counce",
+                    "county": "Hardin, TN",
+                    "lat": 35.0614,
+                    "lng": -88.2034,
+                    "description": "DMR repeater serving Pickwick Dam area",
+                    "status": "On-Air",
+                    "lastUpdate": "2025-08-27",
+                    "bmId": "314620",
+                    "rbId": "23841"
+                }
+            ];
+        },
+
+        getFallbackTalkgroups() {
+            return [
+                {
+                    "id": "31285",
+                    "name": "Northeast Mississippi",
+                    "description": "Regional communications for northeast Mississippi including Corinth, Tupelo, Amory, Oxford, New Albany, Starkville and surrounding areas.",
+                    "type": "Regional",
+                    "timeslot": "1 or 2",
+                    "status": "Static on local repeaters"
+                },
+                {
+                    "id": "3128",
+                    "name": "Mississippi Statewide",
+                    "description": "Mississippi statewide communications. Use for short conversations and as a calling channel.",
+                    "type": "Statewide",
+                    "timeslot": "1 or 2",
+                    "status": "Dynamic"
+                },
+                {
+                    "id": "93",
+                    "name": "North America",
+                    "description": "Continental North America talkgroup. All North American stations welcome.",
+                    "type": "Continental",
+                    "timeslot": "1 or 2",
+                    "status": "Dynamic"
+                },
+                {
+                    "id": "91",
+                    "name": "Worldwide",
+                    "description": "Global communications talkgroup. Very active with stations from around the world.",
+                    "type": "Worldwide",
+                    "timeslot": "1 or 2",
+                    "status": "Dynamic"
+                },
+                {
+                    "id": "9990",
+                    "name": "Parrot (Echo Test)",
+                    "description": "Echo test service - make a PRIVATE call to 9990 to test your audio and connection.",
+                    "type": "Service",
+                    "timeslot": "1 or 2",
+                    "status": "Private Call",
+                    "note": "Configure as PRIVATE CALL, not Group Call"
+                }
+            ];
+        },
+
+        getFallbackNets() {
+            return [
+                {
+                    "id": "skywarn",
+                    "name": "Mid-South SKYWARN Net",
+                    "type": "Emergency",
+                    "schedule": "1st day of each month at 7:00 PM CST",
+                    "talkgroup": "314431",
+                    "description": "Monthly severe weather preparedness net covering the Mid-South region.",
+                    "recurring": "monthly",
+                    "dayOfMonth": 1,
+                    "time": "19:00",
+                    "timezone": "CST"
+                },
+                {
+                    "id": "midsouth",
+                    "name": "Mid-South DMR Net",
+                    "type": "General",
+                    "schedule": "Wednesdays at 7:30 PM CST",
+                    "talkgroup": "31471",
+                    "description": "Weekly general DMR net for the Mid-South area.",
+                    "recurring": "weekly",
+                    "dayOfWeek": 3,
+                    "time": "19:30",
+                    "timezone": "CST"
+                }
+            ];
+        },
+
+        getFallbackResources() {
+            return [
+                {
+                    "id": "brandmeister",
+                    "title": "Brandmeister",
+                    "description": "Global DMR network dashboard and management",
+                    "url": "https://brandmeister.network/"
+                },
+                {
+                    "id": "hoseline",
+                    "title": "Brandmeister Hoseline",
+                    "description": "Live audio stream of DMR network activity",
+                    "url": "https://hose.brandmeister.network/"
+                },
+                {
+                    "id": "repeaterbook",
+                    "title": "RepeaterBook",
+                    "description": "Comprehensive repeater database and information",
+                    "url": "https://www.repeaterbook.com/"
+                },
+                {
+                    "id": "aprs",
+                    "title": "APRS.fi",
+                    "description": "APRS tracking and real-time position reporting",
+                    "url": "https://aprs.fi/"
+                },
+                {
+                    "id": "dmrid",
+                    "title": "DMR-ID Database",
+                    "description": "Register and lookup DMR radio IDs",
+                    "url": "https://radioid.net/"
+                },
+                {
+                    "id": "arrl",
+                    "title": "ARRL",
+                    "description": "American Radio Relay League resources",
+                    "url": "https://www.arrl.org/"
+                }
+            ];
+        }
+    };
+
+    // Map Module
+    const MapModule = {
+        init() {
+            map = L.map('map').setView([34.4, -88.8], 8);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            this.addRepeaterMarkers();
+        },
+
+        addRepeaterMarkers() {
+            appData.repeaters.forEach(repeater => {
+                const marker = L.marker([repeater.lat, repeater.lng]).addTo(map);
+                
+                const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
+                const stateId = repeater.county.includes('TN') ? '47' : '28';
+                const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${stateId}&ID=${repeater.rbId}`;
+                
+                const popupContent = `
+                    <div style="font-family: inherit;">
+                        <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: #2c3e50;">
+                            ${repeater.callsign} - ${repeater.location}
+                        </div>
+                        <div style="margin: 0.5rem 0;">
+                            <strong>Frequency:</strong> ${repeater.frequency}<br>
+                            <strong>County:</strong> ${repeater.county}<br>
+                            <strong>Color Code:</strong> ${repeater.colorCode}<br>
+                            <strong>Status:</strong> ${repeater.status}<br>
+                            <strong>Last Update:</strong> ${repeater.lastUpdate}<br>
+                            <strong>Description:</strong> ${repeater.description}
+                        </div>
+                        <div style="margin-top: 0.8rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <a href="${bmLink}" target="_blank" style="background: #3498db; color: white; text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">Brandmeister</a>
+                            <a href="${rbLink}" target="_blank" style="background: #3498db; color: white; text-decoration: none; padding: 0.4rem 0.8rem; border-radius: 4px; font-size: 0.85rem;">RepeaterBook</a>
+                        </div>
+                    </div>
+                `;
+                
+                marker.bindPopup(popupContent);
+            });
+        }
+    };
+
+    // Compact Mode Module
+    const CompactModule = {
+        renderRepeaters() {
+            const tbody = document.getElementById('repeatersTableBody');
+            tbody.innerHTML = '';
+            
+            appData.repeaters.forEach(repeater => {
+                const stateId = repeater.county.includes('TN') ? '47' : '28';
+                const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
+                const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${stateId}&ID=${repeater.rbId}`;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="compact-callsign">${repeater.callsign}</span></td>
+                    <td>${repeater.location}</td>
+                    <td><span class="compact-frequency">${repeater.frequency}</span></td>
+                    <td>${repeater.colorCode}</td>
+                    <td><span class="compact-status">${repeater.status}</span></td>
+                    <td class="compact-tg">${repeater.bmId}</td>
+                    <td>
+                        <div class="compact-links">
+                            <a href="${bmLink}" target="_blank" class="compact-link">BM</a>
+                            <a href="${rbLink}" target="_blank" class="compact-link">RB</a>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        },
+
+        renderNets() {
+            const tbody = document.getElementById('netsTableBody');
+            tbody.innerHTML = '';
+            
+            appData.nets.forEach(net => {
+                const nextDate = this.getNextNetDate(net);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${net.name}</strong></td>
+                    <td class="compact-tg">TG ${net.talkgroup}</td>
+                    <td>${net.schedule}</td>
+                    <td><span class="compact-status" style="background: ${net.type === 'Emergency' ? '#e74c3c' : '#27ae60'}">${net.type}</span></td>
+                    <td>${this.formatDate(nextDate)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        },
+
+        renderTalkgroups() {
+            const tbody = document.getElementById('talkgroupsTableBody');
+            tbody.innerHTML = '';
+            
+            appData.talkgroups.forEach(tg => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="compact-tg">TG ${tg.id}</td>
+                    <td><strong>${tg.name}</strong></td>
+                    <td><span class="compact-status" style="background: ${this.getTypeColor(tg.type)}">${tg.type}</span></td>
+                    <td>${tg.status}</td>
+                    <td style="max-width: 300px;" class="compact-description">${tg.description}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        },
+
+        getTypeColor(type) {
+            const colors = {
+                'Regional': '#3498db',
+                'Statewide': '#2ecc71',
+                'Continental': '#f39c12',
+                'Worldwide': '#9b59b6',
+                'Service': '#e74c3c'
+            };
+            return colors[type] || '#95a5a6';
+        },
+
+        getNextNetDate(net) {
+            const now = new Date();
+            let next = new Date();
+            
+            if (net.recurring === 'weekly') {
+                const daysUntilNext = (net.dayOfWeek - now.getDay() + 7) % 7;
+                next.setDate(now.getDate() + (daysUntilNext === 0 ? 7 : daysUntilNext));
+            } else if (net.recurring === 'monthly') {
+                if (now.getDate() > net.dayOfMonth) {
+                    next.setMonth(now.getMonth() + 1);
+                }
+                next.setDate(net.dayOfMonth);
+            }
+            
+            const [hour, minute] = net.time.split(':');
+            next.setHours(parseInt(hour), parseInt(minute), 0, 0);
+            
+            if (next <= now) {
+                if (net.recurring === 'weekly') {
+                    next.setDate(next.getDate() + 7);
+                } else if (net.recurring === 'monthly') {
+                    next.setMonth(next.getMonth() + 1);
+                }
+            }
+            
+            return next;
+        },
+
+        formatDate(date) {
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+    };
+
+    // Resources Module
+    const ResourcesModule = {
+        render() {
+            const grid = document.getElementById('resourcesGrid');
+            grid.innerHTML = '';
+            
+            appData.resources.forEach(resource => {
+                const card = document.createElement('div');
+                card.className = 'resource-card';
+                card.innerHTML = `
+                    <div class="resource-title">${resource.title}</div>
+                    <div class="resource-desc">${resource.description}</div>
+                    <a href="${resource.url}" class="resource-link" target="_blank">Visit Site</a>
+                `;
+                grid.appendChild(card);
+            });
+        }
+    };
+
+    // UI Module
+    const UIModule = {
+        init() {
+            this.setupModeToggle();
+            this.setupDarkMode();
+            this.setupScrollBehavior();
+            this.restoreSectionStates();
+        },
+
+        setupModeToggle() {
+            document.getElementById('modeToggle').addEventListener('click', () => {
+                const mapMode = document.getElementById('mapMode');
+                const compactMode = document.getElementById('compactMode');
+                const toggleBtn = document.getElementById('modeToggle');
+
+                if (isMapMode) {
+                    // Switch to compact mode
+                    mapMode.classList.add('hidden');
+                    compactMode.classList.remove('hidden');
+                    compactMode.style.display = 'block';
+                    toggleBtn.textContent = 'Map Mode';
+                    toggleBtn.classList.add('active');
+                    isMapMode = false;
+                } else {
+                    // Switch to map mode
+                    mapMode.classList.remove('hidden');
+                    compactMode.classList.add('hidden');
+                    compactMode.style.display = 'none';
+                    toggleBtn.textContent = 'Compact Mode';
+                    toggleBtn.classList.remove('active');
+                    isMapMode = true;
+                    
+                    if (map) {
+                        setTimeout(() => {
+                            map.invalidateSize();
+                        }, 100);
+                    }
+                }
+            });
+        },
+
+        setupDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            this.updateDarkModeIcon(savedTheme);
+            
+            darkModeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                this.updateDarkModeIcon(newTheme);
+            });
+        },
+
+        updateDarkModeIcon(theme) {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            darkModeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        },
+
+        setupScrollBehavior() {
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    header.classList.add('collapsed');
+                } else {
+                    header.classList.remove('collapsed');
+                }
+            });
+        },
+
+        restoreSectionStates() {
+            ['repeatersSection', 'netsSection', 'talkgroupsSection', 'resourcesSection'].forEach(sectionId => {
+                const state = localStorage.getItem(`section-${sectionId}`);
+                if (state === 'collapsed') {
+                    const section = document.getElementById(sectionId);
+                    const toggle = section.parentElement.querySelector('.section-toggle');
+                    section.classList.add('collapsed');
+                    toggle.classList.add('collapsed');
+                }
+            });
+        }
+    };
+
+    // Global Functions
+    function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const toggle = section.parentElement.querySelector('.section-toggle');
+        
+        section.classList.toggle('collapsed');
+        toggle.classList.toggle('collapsed');
+        
+        const isCollapsed = section.classList.contains('collapsed');
+        localStorage.setItem(`section-${sectionId}`, isCollapsed ? 'collapsed' : 'expanded');
+    }
+
+    // Application Initialization
+    async function initApp() {
+        try {
+            await DataLoader.loadAllData();
+            
+            MapModule.init();
+            CompactModule.renderRepeaters();
+            CompactModule.renderNets();
+            CompactModule.renderTalkgroups();
+            ResourcesModule.render();
+            UIModule.init();
+            
+            console.log('North Mississippi DMR Network loaded successfully');
+        } catch (error) {
+            console.error('Failed to initialize app:', error);
+        }
+    }
+
+    // Start the application
+    document.addEventListener('DOMContentLoaded', initApp);
+</script>
+```
+
 </body>
 </html>
