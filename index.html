@@ -170,46 +170,46 @@
 
         .repeater-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.8rem;
         }
 
         .repeater-card {
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 6px;
+            padding: 0.8rem;
             background: var(--bg-tertiary);
             transition: all 0.3s ease;
         }
 
         .repeater-card:hover {
-            box-shadow: 0 4px 12px var(--shadow);
-            transform: translateY(-2px);
+            box-shadow: 0 2px 8px var(--shadow);
+            transform: translateY(-1px);
         }
 
         .repeater-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: var(--text-light);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
         .repeater-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.3rem;
-            margin: 0.5rem 0;
-            font-size: 0.9rem;
+            gap: 0.2rem;
+            margin: 0.4rem 0;
+            font-size: 0.8rem;
         }
 
         .detail-item {
             display: flex;
             justify-content: space-between;
-            padding: 0.2rem 0;
+            padding: 0.1rem 0;
         }
 
         .detail-label {
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text-secondary);
         }
 
@@ -217,12 +217,13 @@
             color: var(--text-primary);
             font-weight: 500;
             text-align: right;
+            font-size: 0.75rem;
         }
 
         .repeater-links {
-            margin-top: 0.75rem;
+            margin-top: 0.5rem;
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             flex-wrap: wrap;
         }
 
@@ -230,9 +231,9 @@
             background: var(--btn-primary);
             color: white;
             text-decoration: none;
-            padding: 0.3rem 0.6rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
             transition: all 0.3s ease;
         }
 
@@ -255,6 +256,37 @@
             color: var(--text-light);
             margin-bottom: 1.5rem;
             text-align: center;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .resources-title:hover {
+            color: var(--btn-primary);
+        }
+
+        .section-toggle {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .section-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            padding: 0;
+            margin: 0;
         }
 
         .resources-grid {
@@ -685,51 +717,66 @@
             </div>
 
             <div class="resources-section">
-                <h2 class="resources-title">Net Schedule</h2>
-                <div id="netContainer">
-                    <!-- Net schedule will be loaded here -->
+                <h2 class="resources-title" onclick="toggleSection('netSection')">
+                    <span class="section-toggle">🔽</span>
+                    Net Schedule
+                </h2>
+                <div id="netSection" class="section-content">
+                    <div id="netContainer">
+                        <!-- Net schedule will be loaded here -->
+                    </div>
                 </div>
             </div>
 
             <div class="resources-section">
-                <h2 class="resources-title">DMR Talk Groups</h2>
-                <div id="talkgroupContainer">
-                    <!-- Talk groups will be loaded here -->
+                <h2 class="resources-title" onclick="toggleSection('talkgroupSection')">
+                    <span class="section-toggle">🔽</span>
+                    DMR Talk Groups
+                </h2>
+                <div id="talkgroupSection" class="section-content">
+                    <div id="talkgroupContainer">
+                        <!-- Talk groups will be loaded here -->
+                    </div>
                 </div>
             </div>
 
             <div class="resources-section">
-                <h2 class="resources-title">Essential DMR Resources</h2>
-                <div class="resources-grid">
-                    <div class="resource-card">
-                        <div class="resource-title">Brandmeister</div>
-                        <div class="resource-desc">Global DMR network dashboard and management</div>
-                        <a href="https://brandmeister.network/" class="resource-link" target="_blank">Visit Site</a>
-                    </div>
-                    <div class="resource-card">
-                        <div class="resource-title">Brandmeister Hoseline</div>
-                        <div class="resource-desc">Live audio stream of DMR network activity</div>
-                        <a href="https://hose.brandmeister.network/" class="resource-link" target="_blank">Listen Live</a>
-                    </div>
-                    <div class="resource-card">
-                        <div class="resource-title">RepeaterBook</div>
-                        <div class="resource-desc">Comprehensive repeater database and information</div>
-                        <a href="https://www.repeaterbook.com/" class="resource-link" target="_blank">Visit Site</a>
-                    </div>
-                    <div class="resource-card">
-                        <div class="resource-title">APRS.fi</div>
-                        <div class="resource-desc">APRS tracking and real-time position reporting</div>
-                        <a href="https://aprs.fi/" class="resource-link" target="_blank">Visit Site</a>
-                    </div>
-                    <div class="resource-card">
-                        <div class="resource-title">DMR-ID Database</div>
-                        <div class="resource-desc">Register and lookup DMR radio IDs</div>
-                        <a href="https://radioid.net/" class="resource-link" target="_blank">Visit Site</a>
-                    </div>
-                    <div class="resource-card">
-                        <div class="resource-title">ARRL</div>
-                        <div class="resource-desc">American Radio Relay League resources</div>
-                        <a href="https://www.arrl.org/" class="resource-link" target="_blank">Visit Site</a>
+                <h2 class="resources-title" onclick="toggleSection('resourcesSection')">
+                    <span class="section-toggle">🔽</span>
+                    Essential DMR Resources
+                </h2>
+                <div id="resourcesSection" class="section-content">
+                    <div class="resources-grid">
+                        <div class="resource-card">
+                            <div class="resource-title">Brandmeister</div>
+                            <div class="resource-desc">Global DMR network dashboard and management</div>
+                            <a href="https://brandmeister.network/" class="resource-link" target="_blank">Visit Site</a>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-title">Brandmeister Hoseline</div>
+                            <div class="resource-desc">Live audio stream of DMR network activity</div>
+                            <a href="https://hose.brandmeister.network/" class="resource-link" target="_blank">Listen Live</a>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-title">RepeaterBook</div>
+                            <div class="resource-desc">Comprehensive repeater database and information</div>
+                            <a href="https://www.repeaterbook.com/" class="resource-link" target="_blank">Visit Site</a>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-title">APRS.fi</div>
+                            <div class="resource-desc">APRS tracking and real-time position reporting</div>
+                            <a href="https://aprs.fi/" class="resource-link" target="_blank">Visit Site</a>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-title">DMR-ID Database</div>
+                            <div class="resource-desc">Register and lookup DMR radio IDs</div>
+                            <a href="https://radioid.net/" class="resource-link" target="_blank">Visit Site</a>
+                        </div>
+                        <div class="resource-card">
+                            <div class="resource-title">ARRL</div>
+                            <div class="resource-desc">American Radio Relay League resources</div>
+                            <a href="https://www.arrl.org/" class="resource-link" target="_blank">Visit Site</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -999,7 +1046,31 @@
             container.appendChild(grid);
         }
 
-        // Dark mode functionality
+        // Section collapse/expand functionality
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const toggle = section.previousElementSibling.querySelector('.section-toggle');
+            
+            section.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+            
+            // Save state to localStorage
+            const isCollapsed = section.classList.contains('collapsed');
+            localStorage.setItem(`section-${sectionId}`, isCollapsed ? 'collapsed' : 'expanded');
+        }
+
+        // Restore section states from localStorage
+        function restoreSectionStates() {
+            ['netSection', 'talkgroupSection', 'resourcesSection'].forEach(sectionId => {
+                const state = localStorage.getItem(`section-${sectionId}`);
+                if (state === 'collapsed') {
+                    const section = document.getElementById(sectionId);
+                    const toggle = section.previousElementSibling.querySelector('.section-toggle');
+                    section.classList.add('collapsed');
+                    toggle.classList.add('collapsed');
+                }
+            });
+        }
         function initDarkMode() {
             const darkModeToggle = document.getElementById('darkModeToggle');
             const savedTheme = localStorage.getItem('theme') || 'light';
@@ -1146,6 +1217,7 @@
             generateSimpleCards();
             generateNetCards();
             generateTalkgroupCards();
+            restoreSectionStates();
         });
     </script>
 </body>
