@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>North Mississippi DMR Network</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M20,80 Q50,20 80,80 Q50,60 20,80' fill='%23CC2936'/><path d='M25,75 Q50,25 75,75 Q50,55 25,75' fill='none' stroke='%23FFD23F' stroke-width='2'/><path d='M30,70 Q50,30 70,70 Q50,50 30,70' fill='none' stroke='%232E86AB' stroke-width='2'/><rect x='48' y='35' width='4' height='20' rx='2' fill='%23CC2936'/><rect x='45' y='32' width='10' height='2' rx='1' fill='%23CC2936'/><circle cx='50' cy='30' r='2' fill='%23CC2936'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><circle cx='25' cy='25' r='20' fill='%23CC2936'/><rect x='24' y='15' width='2' height='20' fill='white'/><rect x='20' y='12' width='10' height='2' fill='white'/></svg>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
@@ -52,7 +52,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
             color: var(--text-primary);
             background: var(--bg-color);
@@ -71,7 +71,7 @@
             padding: 1rem 0;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 2000;
             box-shadow: 0 2px 10px var(--shadow);
         }
 
@@ -79,24 +79,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             gap: 1rem;
         }
 
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
         }
 
-        .subtitle {
-            color: #ecf0f1;
-            font-size: 0.9rem;
-            margin-top: 0.25rem;
-        }
-
-        .controls {
+        .header-controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.5rem;
             align-items: center;
         }
 
@@ -107,17 +100,17 @@
             padding: 0.5rem 1rem;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .toggle-btn:hover {
             background: var(--btn-primary-hover);
-            transform: translateY(-2px);
         }
 
         .toggle-btn.active {
-            background: var(--btn-danger);
+            background: var(--btn-success);
         }
 
         .dark-mode-toggle {
@@ -127,7 +120,7 @@
             padding: 0.5rem;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
         }
 
@@ -140,10 +133,7 @@
             padding: 1rem 0;
         }
 
-        .mode-indicator {
-            display: none;
-        }
-
+        /* Map Styles */
         #mapContainer {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -155,147 +145,48 @@
         #map {
             height: 500px;
             width: 100%;
+            position: relative;
         }
 
-        .simple-mode {
+        .leaflet-control-container {
+            z-index: 1500 !important;
+        }
+
+        .leaflet-bottom.leaflet-right {
+            z-index: 1500 !important;
+        }
+
+        .leaflet-control-zoom,
+        .leaflet-control-attribution {
+            z-index: 1500 !important;
+        }
+
+        /* List Sections */
+        .list-section {
             background: var(--bg-secondary);
             border-radius: 12px;
             box-shadow: 0 4px 20px var(--shadow);
-            padding: 1rem;
+            margin-bottom: 2rem;
         }
 
-        .repeater-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.5rem;
-        }
-
-        .repeater-card {
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            background: var(--bg-tertiary);
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-
-        .repeater-card.collapsed .repeater-details,
-        .repeater-card.collapsed .repeater-links {
-            display: none;
-        }
-
-        .repeater-header {
+        .section-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            user-select: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.6rem 0.8rem;
-            cursor: pointer;
-            user-select: none;
-            background: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
         }
 
-        .repeater-header:hover {
+        .section-header:hover {
             background: var(--bg-highlight);
         }
 
-        .repeater-title {
-            font-size: 0.95rem;
+        .section-title {
+            font-size: 1.3rem;
             font-weight: 600;
             color: var(--text-light);
-            margin: 0;
-        }
-
-        .repeater-toggle {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            transition: transform 0.3s ease;
-        }
-
-        .repeater-toggle.collapsed {
-            transform: rotate(-90deg);
-        }
-
-        .repeater-content {
-            padding: 0.6rem 0.8rem;
-        }
-
-        .repeater-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.3rem 0.8rem;
-            margin-bottom: 0.6rem;
-            font-size: 0.75rem;
-            line-height: 1.2;
-        }
-
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.1rem 0;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .detail-label {
-            font-weight: 500;
-            color: var(--text-secondary);
-            white-space: nowrap;
-        }
-
-        .detail-value {
-            color: var(--text-primary);
-            font-weight: 500;
-            text-align: right;
-            font-size: 0.7rem;
-            font-family: 'SF Mono', 'Monaco', monospace;
-        }
-
-        .repeater-links {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-        }
-
-        .link-btn {
-            background: var(--btn-primary);
-            color: white;
-            text-decoration: none;
-            padding: 0.2rem 0.4rem;
-            border-radius: 3px;
-            font-size: 0.65rem;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .link-btn:hover {
-            background: var(--btn-primary-hover);
-            transform: translateY(-1px);
-        }
-
-        .resources-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px var(--shadow);
-            padding: 2rem;
-            margin-top: 2rem;
-        }
-
-        .resources-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            user-select: none;
-            transition: all 0.3s ease;
-        }
-
-        .resources-title:hover {
-            color: var(--btn-primary);
         }
 
         .section-toggle {
@@ -314,154 +205,118 @@
 
         .section-content.collapsed {
             max-height: 0;
+        }
+
+        /* Mobile View - List Style */
+        .mobile-view .list-container {
             padding: 0;
-            margin: 0;
         }
 
-        .resources-grid {
+        .mobile-view .list-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .mobile-view .list-item:hover {
+            background: var(--bg-highlight);
+        }
+
+        .mobile-view .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-view .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-view .item-title {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .mobile-view .item-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', monospace;
+            margin-top: 0.2rem;
+        }
+
+        .mobile-view .item-toggle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .mobile-view .item-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .mobile-view .item-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: 1fr;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            padding-left: 0.5rem;
+            border-left: 2px solid var(--border-color);
         }
 
-        .talkgroup-grid {
+        .mobile-view .item-details.collapsed {
+            display: none;
+        }
+
+        .mobile-view .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.2rem 0;
+        }
+
+        .mobile-view .detail-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .mobile-view .detail-value {
+            color: var(--text-primary);
+            font-family: 'SF Mono', monospace;
+            font-size: 0.75rem;
+        }
+
+        .mobile-view .item-links {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mobile-view .link-btn {
+            background: var(--btn-primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-view .link-btn:hover {
+            background: var(--btn-primary-hover);
+        }
+
+        /* Desktop View - Card Style */
+        .desktop-view .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1rem;
+            padding: 1rem;
         }
 
-        .net-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.2rem;
-        }
-
-        @media (min-width: 768px) {
-            .net-grid {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            }
-        }
-
-        .net-card {
-            background: var(--bg-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border-left: 4px solid #27ae60;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .net-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px var(--shadow);
-            border-left-color: #229954;
-        }
-
-        .net-card.emergency {
-            border-left-color: #e74c3c;
-        }
-
-        .net-card.emergency:hover {
-            border-left-color: #c0392b;
-        }
-
-        .net-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .net-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.3rem;
-        }
-
-        .net-type {
-            background: #27ae60;
-            color: white;
-            padding: 0.2rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .net-type.emergency {
-            background: #e74c3c;
-        }
-
-        .net-schedule {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 1rem;
-            padding: 0.8rem;
-            background: var(--bg-tertiary);
-            border-radius: 6px;
-        }
-
-        .net-schedule-icon {
-            font-size: 1.2rem;
-            color: var(--btn-primary);
-        }
-
-        .net-schedule-text {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .net-frequency {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .net-tg {
-            background: var(--btn-primary);
-            color: white;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .net-tg-label {
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .net-description {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 0.8rem;
-        }
-
-        .net-next {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem;
-            background: rgba(39, 174, 96, 0.1);
-            border-radius: 6px;
-            color: #27ae60;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .net-next.emergency {
-            background: rgba(231, 76, 60, 0.1);
-            color: #e74c3c;
-        }
-
-        .talkgroup-card {
+        .desktop-view .card {
             background: var(--bg-color);
             border-radius: 8px;
             padding: 1.2rem;
@@ -469,35 +324,34 @@
             transition: all 0.3s ease;
         }
 
-        .talkgroup-card:hover {
+        .desktop-view .card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px var(--shadow);
-            border-left-color: var(--btn-success);
         }
 
-        .talkgroup-card.service {
+        .desktop-view .card.service {
             border-left-color: #e74c3c;
         }
 
-        .talkgroup-card.service:hover {
-            border-left-color: #c0392b;
+        .desktop-view .card.emergency {
+            border-left-color: #e74c3c;
         }
 
-        .talkgroup-header {
+        .desktop-view .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 0.8rem;
         }
 
-        .talkgroup-id {
-            font-size: 1.4rem;
+        .desktop-view .card-id {
+            font-size: 1.3rem;
             font-weight: 700;
             color: var(--btn-primary);
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-family: 'SF Mono', monospace;
         }
 
-        .talkgroup-type {
+        .desktop-view .card-type {
             background: var(--btn-primary);
             color: white;
             padding: 0.2rem 0.6rem;
@@ -507,197 +361,54 @@
             text-transform: uppercase;
         }
 
-        .talkgroup-type.service {
+        .desktop-view .card-type.service {
             background: #e74c3c;
         }
 
-        .talkgroup-name {
+        .desktop-view .card-type.emergency {
+            background: #e74c3c;
+        }
+
+        .desktop-view .card-title {
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-light);
             margin-bottom: 0.5rem;
         }
 
-        .talkgroup-description {
+        .desktop-view .card-description {
             color: var(--text-secondary);
             font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 0.8rem;
         }
 
-        .talkgroup-details {
+        .desktop-view .card-details {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
             font-size: 0.8rem;
         }
 
-        .talkgroup-detail {
+        .desktop-view .card-detail {
             display: flex;
             flex-direction: column;
             gap: 0.1rem;
         }
 
-        .talkgroup-detail-label {
+        .desktop-view .detail-label {
             font-weight: 600;
             color: var(--text-secondary);
             text-transform: uppercase;
             font-size: 0.7rem;
         }
 
-        .talkgroup-detail-value {
+        .desktop-view .detail-value {
             color: var(--text-primary);
             font-weight: 500;
         }
 
-        .simple-mode .net-grid,
-        .simple-mode .talkgroup-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.5rem;
-        }
-
-        .simple-mode .net-card,
-        .simple-mode .talkgroup-card {
-            overflow: hidden;
-        }
-
-        .simple-mode .net-card.collapsed .net-schedule,
-        .simple-mode .net-card.collapsed .net-frequency,
-        .simple-mode .net-card.collapsed .net-description,
-        .simple-mode .net-card.collapsed .net-next,
-        .simple-mode .talkgroup-card.collapsed .talkgroup-description,
-        .simple-mode .talkgroup-card.collapsed .talkgroup-details,
-        .simple-mode .talkgroup-card.collapsed .talkgroup-note {
-            display: none;
-        }
-
-        .simple-mode .compact-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.6rem 0.8rem;
-            cursor: pointer;
-            user-select: none;
-            background: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .simple-mode .compact-header:hover {
-            background: var(--bg-highlight);
-        }
-
-        .simple-mode .compact-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin: 0;
-        }
-
-        .simple-mode .compact-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-family: 'SF Mono', 'Monaco', monospace;
-        }
-
-        .simple-mode .compact-toggle {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            transition: transform 0.3s ease;
-        }
-
-        .simple-mode .compact-toggle.collapsed {
-            transform: rotate(-90deg);
-        }
-
-        .simple-mode .compact-content {
-            padding: 0.6rem 0.8rem;
-        }
-
-        .resource-card {
-            background: var(--bg-color);
-            border-radius: 8px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .resource-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px var(--shadow);
-        }
-
-        .resource-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-        }
-
-        .resource-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .resource-link {
-            display: inline-block;
-            background: var(--btn-success);
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .simple-mode .resource-link {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .resource-link:hover {
-            background: var(--btn-success-hover);
-            transform: translateY(-1px);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .controls {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .repeater-details {
-                grid-template-columns: 1fr;
-            }
-
-            .repeater-list {
-                grid-template-columns: 1fr;
-            }
-
-            .resources-grid {
-                grid-template-columns: 1fr;
-            }
-
-            #map {
-                height: 400px;
-            }
-        }
-
-        .talkgroup-note {
+        .desktop-view .card-note {
             margin-top: 0.8rem;
             padding: 0.6rem;
             background: rgba(231, 76, 60, 0.1);
@@ -707,26 +418,67 @@
             font-weight: 500;
         }
 
-        .leaflet-popup-content {
-            font-family: inherit;
-        }
-
-        .popup-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-        }
-
-        .popup-details {
-            margin: 0.5rem 0;
-        }
-
-        .popup-links {
+        .desktop-view .card-links {
             margin-top: 0.8rem;
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
+        }
+
+        .desktop-view .link-btn {
+            background: var(--btn-primary);
+            color: white;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .desktop-view .link-btn:hover {
+            background: var(--btn-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .header-title {
+                font-size: 1.3rem;
+            }
+
+            .header-controls {
+                gap: 0.3rem;
+            }
+
+            .toggle-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            #map {
+                height: 400px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .section-header {
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -734,71 +486,11 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo-container">
-                    <svg viewBox="0 0 450 60" xmlns="http://www.w3.org/2000/svg" style="height: 50px; width: auto;">
-                      <defs>
-                        <style>
-                          .title-text { 
-                            font-family: 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', sans-serif; 
-                            font-weight: 600;
-                            letter-spacing: -0.5px;
-                            fill: white;
-                          }
-                          .small-text { 
-                            font-family: 'SF Pro Display', 'Helvetica Neue', 'Segoe UI', sans-serif; 
-                            font-weight: 400;
-                            fill: rgba(255,255,255,0.8);
-                          }
-                        </style>
-                      </defs>
-                      
-                      <!-- Antenna icon -->
-                      <g transform="translate(30,30)">
-                        <!-- Base circle -->
-                        <circle cx="0" cy="0" r="20" fill="none" stroke="rgba(204, 41, 54, 0.3)" stroke-width="1"/>
-                        
-                        <!-- Simple antenna -->
-                        <g fill="#CC2936">
-                          <rect x="-0.5" y="-12" width="1" height="24" rx="0.5"/>
-                          <rect x="-5" y="-15" width="10" height="1.5" rx="0.5"/>
-                          <rect x="-3" y="-6" width="6" height="1" rx="0.5"/>
-                          <rect x="-3" y="6" width="6" height="1" rx="0.5"/>
-                        </g>
-                        
-                        <!-- Static radio waves -->
-                        <g fill="none" stroke-width="1" opacity="0.7">
-                          <path d="M 6,-12 Q 12,-18 18,-12" stroke="#CC2936"/>
-                          <path d="M 10,-12 Q 18,-22 26,-12" stroke="#FFD23F"/>
-                          <path d="M 14,-12 Q 24,-26 34,-12" stroke="#2E86AB"/>
-                        </g>
-                      </g>
-                      
-                      <!-- Main title -->
-                      <text x="70" y="35" class="title-text" font-size="18">
-                        North Mississippi DMR Network
-                      </text>
-                      
-                      <!-- Underline -->
-                      <line x1="70" y1="42" x2="160" y2="42" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
-                      
-                      <!-- Small tech indicators -->
-                      <g transform="translate(70, 52)">
-                        <text class="small-text" font-size="8">UHF/VHF</text>
-                        <text x="45" class="small-text" font-size="8">DMR</text>
-                      </g>
-                      
-                      <!-- Digital badge - positioned far right -->
-                      <g transform="translate(380, 20)">
-                        <rect x="0" y="0" width="55" height="16" rx="8" fill="rgba(46, 134, 171, 0.2)" stroke="#2E86AB" stroke-width="1"/>
-                        <text x="27.5" y="11" class="small-text" font-size="8" font-weight="600" fill="#2E86AB" text-anchor="middle">
-                          DIGITAL
-                        </text>
-                      </g>
-                    </svg>
-                </div>
-                <div class="controls">
-                    <button id="modeToggle" class="toggle-btn">Compact Mode</button>
-                    <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
+                <h1 class="header-title">North Mississippi DMR Network</h1>
+                <div class="header-controls">
+                    <button id="mapToggle" class="toggle-btn">Hide Map</button>
+                    <button id="viewToggle" class="toggle-btn">Mobile View</button>
+                    <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
                 </div>
             </div>
         </div>
@@ -810,74 +502,43 @@
                 <div id="map"></div>
             </div>
 
-            <div id="simpleMode" class="simple-mode hidden">
-                <div class="repeater-list" id="repeaterList">
-                    <!-- Repeater cards will be dynamically generated -->
+            <div id="repeatersSection" class="list-section">
+                <div class="section-header" onclick="toggleSection('repeatersContent')">
+                    <h2 class="section-title">DMR Repeaters</h2>
+                    <span class="section-toggle">🔽</span>
+                </div>
+                <div id="repeatersContent" class="section-content">
+                    <div id="repeatersContainer"></div>
                 </div>
             </div>
 
-            <div class="resources-section">
-                <h2 class="resources-title" onclick="toggleSection('netSection')">
+            <div id="netsSection" class="list-section">
+                <div class="section-header" onclick="toggleSection('netsContent')">
+                    <h2 class="section-title">Net Schedule</h2>
                     <span class="section-toggle">🔽</span>
-                    Net Schedule
-                </h2>
-                <div id="netSection" class="section-content">
-                    <div id="netContainer">
-                        <!-- Net schedule will be loaded here -->
-                    </div>
+                </div>
+                <div id="netsContent" class="section-content">
+                    <div id="netsContainer"></div>
                 </div>
             </div>
 
-            <div class="resources-section">
-                <h2 class="resources-title" onclick="toggleSection('talkgroupSection')">
+            <div id="talkgroupsSection" class="list-section">
+                <div class="section-header" onclick="toggleSection('talkgroupsContent')">
+                    <h2 class="section-title">DMR Talk Groups</h2>
                     <span class="section-toggle">🔽</span>
-                    DMR Talk Groups
-                </h2>
-                <div id="talkgroupSection" class="section-content">
-                    <div id="talkgroupContainer">
-                        <!-- Talk groups will be loaded here -->
-                    </div>
+                </div>
+                <div id="talkgroupsContent" class="section-content">
+                    <div id="talkgroupsContainer"></div>
                 </div>
             </div>
 
-            <div class="resources-section">
-                <h2 class="resources-title" onclick="toggleSection('resourcesSection')">
+            <div id="resourcesSection" class="list-section">
+                <div class="section-header" onclick="toggleSection('resourcesContent')">
+                    <h2 class="section-title">Essential DMR Resources</h2>
                     <span class="section-toggle">🔽</span>
-                    Essential DMR Resources
-                </h2>
-                <div id="resourcesSection" class="section-content">
-                    <div class="resources-grid">
-                        <div class="resource-card">
-                            <div class="resource-title">Brandmeister</div>
-                            <div class="resource-desc">Global DMR network dashboard and management</div>
-                            <a href="https://brandmeister.network/" class="resource-link" target="_blank">Visit Site</a>
-                        </div>
-                        <div class="resource-card">
-                            <div class="resource-title">Brandmeister Hoseline</div>
-                            <div class="resource-desc">Live audio stream of DMR network activity</div>
-                            <a href="https://hose.brandmeister.network/" class="resource-link" target="_blank">Listen Live</a>
-                        </div>
-                        <div class="resource-card">
-                            <div class="resource-title">RepeaterBook</div>
-                            <div class="resource-desc">Comprehensive repeater database and information</div>
-                            <a href="https://www.repeaterbook.com/" class="resource-link" target="_blank">Visit Site</a>
-                        </div>
-                        <div class="resource-card">
-                            <div class="resource-title">APRS.fi</div>
-                            <div class="resource-desc">APRS tracking and real-time position reporting</div>
-                            <a href="https://aprs.fi/" class="resource-link" target="_blank">Visit Site</a>
-                        </div>
-                        <div class="resource-card">
-                            <div class="resource-title">DMR-ID Database</div>
-                            <div class="resource-desc">Register and lookup DMR radio IDs</div>
-                            <a href="https://radioid.net/" class="resource-link" target="_blank">Visit Site</a>
-                        </div>
-                        <div class="resource-card">
-                            <div class="resource-title">ARRL</div>
-                            <div class="resource-desc">American Radio Relay League resources</div>
-                            <a href="https://www.arrl.org/" class="resource-link" target="_blank">Visit Site</a>
-                        </div>
-                    </div>
+                </div>
+                <div id="resourcesContent" class="section-content">
+                    <div id="resourcesContainer"></div>
                 </div>
             </div>
         </div>
@@ -885,112 +546,315 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // DMR Repeater data for North Mississippi and nearby areas
-        const repeaters = [
-            {
-                id: 1,
-                callsign: "N5VGK",
-                frequency: "444.950 MHz (+5 MHz)",
-                colorCode: "1",
-                location: "Tupelo",
-                county: "Lee, MS",
-                lat: 34.25759888,
-                lng: -88.70339966,
-                description: "Primary DMR repeater serving the Tupelo area",
-                status: "On-Air",
-                lastUpdate: "2025-06-12",
-                bmId: "310974",
-                rbId: "8033"
-            },
-            {
-                id: 2,
-                callsign: "KI5CMA",
-                frequency: "444.425 MHz (+5 MHz)",
-                colorCode: "1",
-                location: "Oxford - Thacker Mountain",
-                county: "Lafayette, MS",
-                lat: 34.32809830,
-                lng: -89.57929993,
-                description: "DMR repeater serving Oxford and University area",
-                status: "On-Air",
-                lastUpdate: "2025-08-27",
-                bmId: "314649",
-                rbId: "18132"
-            },
-            {
-                id: 3,
-                callsign: "KG5JDS",
-                frequency: "146.835 MHz (-0.6 MHz)",
-                colorCode: "1",
-                location: "Pontotoc - Water Tower",
-                county: "Pontotoc, MS",
-                lat: 34.24789810,
-                lng: -88.99870300,
-                description: "2-meter DMR repeater serving Pontotoc area",
-                status: "On-Air",
-                lastUpdate: "2025-08-27",
-                bmId: "314627",
-                rbId: "93"
-            },
-            {
-                id: 4,
-                callsign: "N5VGK",
-                frequency: "442.075 MHz (+5 MHz)",
-                colorCode: "1",
-                location: "Pickwick/Counce",
-                county: "Hardin, TN",
-                lat: 35.0614,
-                lng: -88.2034,
-                description: "DMR repeater serving Pickwick Dam area",
-                status: "On-Air",
-                lastUpdate: "2025-08-27",
-                bmId: "314620",
-                rbId: "23841"
-            }
-        ];
-
         let map;
-        let isMapMode = true;
+        let isMobileView = false;
+        let isMapVisible = true;
+        let data = {};
 
-        // Net Schedule data
-        const nets = [
-            {
-                "id": "skywarn",
-                "name": "Mid-South SKYWARN Net",
-                "type": "Emergency",
-                "schedule": "1st day of each month at 7:00 PM CST",
-                "talkgroup": "314431",
-                "description": "Monthly severe weather preparedness net covering the Mid-South region. Focus on SKYWARN spotter training and severe weather communications.",
-                "recurring": "monthly",
-                "dayOfMonth": 1,
-                "time": "19:00",
-                "timezone": "CST"
-            },
-            {
-                "id": "midsouth",
-                "name": "Mid-South DMR Net",
-                "type": "General", 
-                "schedule": "Wednesdays at 7:30 PM CST",
-                "talkgroup": "31471",
-                "description": "Weekly general DMR net for the Mid-South area. Open discussion, check-ins, and DMR technical topics welcome.",
-                "recurring": "weekly",
-                "dayOfWeek": 3,
-                "time": "19:30",
-                "timezone": "CST"
+        // Load all data from JSON files
+        async function loadData() {
+            try {
+                const [repeaters, nets, talkgroups, resources] = await Promise.all([
+                    fetch('repeaters_data.json').then(r => r.json()),
+                    fetch('nets_data.json').then(r => r.json()),
+                    fetch('talkgroups_data.json').then(r => r.json()),
+                    fetch('resources_data.json').then(r => r.json())
+                ]);
+                
+                data = { 
+                    repeaters: repeaters.repeaters, 
+                    nets: nets.nets, 
+                    talkgroups: talkgroups.talkgroups, 
+                    resources: resources.resources 
+                };
+            } catch (error) {
+                console.error('Error loading data:', error);
             }
-        ];
+        }
 
-        // Calculate next occurrence of a net
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([34.4, -88.8], 8);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            data.repeaters?.forEach(repeater => {
+                const marker = L.marker([repeater.lat, repeater.lng]).addTo(map);
+                
+                const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
+                const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${repeater.county.includes('TN') ? '47' : '28'}&ID=${repeater.rbId}`;
+                
+                marker.bindPopup(`
+                    <div style="font-family: inherit;">
+                        <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">${repeater.callsign} - ${repeater.location}</div>
+                        <div style="margin: 0.5rem 0;">
+                            <strong>Frequency:</strong> ${repeater.frequency}<br>
+                            <strong>County:</strong> ${repeater.county}<br>
+                            <strong>Color Code:</strong> ${repeater.colorCode}<br>
+                            <strong>Status:</strong> ${repeater.status}
+                        </div>
+                        <div style="margin-top: 0.8rem; display: flex; gap: 0.5rem;">
+                            <a href="${bmLink}" target="_blank" style="background: #3498db; color: white; text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">Brandmeister</a>
+                            <a href="${rbLink}" target="_blank" style="background: #3498db; color: white; text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">RepeaterBook</a>
+                        </div>
+                    </div>
+                `);
+            });
+        }
+
+        // Generate content based on view mode
+        function generateContent() {
+            generateRepeaters();
+            generateNets();
+            generateTalkgroups();
+            generateResources();
+        }
+
+        function generateRepeaters() {
+            const container = document.getElementById('repeatersContainer');
+            container.className = isMobileView ? 'list-container' : 'grid-container';
+            container.innerHTML = '';
+            
+            if (isMobileView) {
+                data.repeaters?.forEach(repeater => {
+                    const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
+                    const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${repeater.county.includes('TN') ? '47' : '28'}&ID=${repeater.rbId}`;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-header" onclick="toggleItem(this.parentElement)">
+                            <div>
+                                <div class="item-title">${repeater.callsign} - ${repeater.location}</div>
+                                <div class="item-subtitle">${repeater.frequency}</div>
+                            </div>
+                            <div class="item-toggle">🔽</div>
+                        </div>
+                        <div class="item-details">
+                            <div class="detail-row">
+                                <span class="detail-label">County</span>
+                                <span class="detail-value">${repeater.county}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Color Code</span>
+                                <span class="detail-value">${repeater.colorCode}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value">${repeater.status}</span>
+                            </div>
+                            <div class="item-links">
+                                <a href="${bmLink}" class="link-btn" target="_blank">Brandmeister</a>
+                                <a href="${rbLink}" class="link-btn" target="_blank">RepeaterBook</a>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                });
+            } else {
+                data.repeaters?.forEach(repeater => {
+                    const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
+                    const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${repeater.county.includes('TN') ? '47' : '28'}&ID=${repeater.rbId}`;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="card-id">${repeater.callsign}</div>
+                        </div>
+                        <div class="card-title">${repeater.location}</div>
+                        <div class="card-description">${repeater.description}</div>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <span class="detail-label">Frequency</span>
+                                <span class="detail-value">${repeater.frequency}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-label">County</span>
+                                <span class="detail-value">${repeater.county}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-label">Color Code</span>
+                                <span class="detail-value">${repeater.colorCode}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value">${repeater.status}</span>
+                            </div>
+                        </div>
+                        <div class="card-links">
+                            <a href="${bmLink}" class="link-btn" target="_blank">Brandmeister</a>
+                            <a href="${rbLink}" class="link-btn" target="_blank">RepeaterBook</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+        }
+
+        function generateNets() {
+            const container = document.getElementById('netsContainer');
+            container.className = isMobileView ? 'list-container' : 'grid-container';
+            container.innerHTML = '';
+            
+            data.nets?.forEach(net => {
+                const nextDate = getNextNetDate(net);
+                
+                if (isMobileView) {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-header" onclick="toggleItem(this.parentElement)">
+                            <div>
+                                <div class="item-title">${net.name}</div>
+                                <div class="item-subtitle">TG ${net.talkgroup}</div>
+                            </div>
+                            <div class="item-toggle">🔽</div>
+                        </div>
+                        <div class="item-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Schedule</span>
+                                <span class="detail-value">${net.schedule}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Next</span>
+                                <span class="detail-value">${formatNetDate(nextDate)}</span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                } else {
+                    const card = document.createElement('div');
+                    card.className = `card ${net.type.toLowerCase()}`;
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="card-id">TG ${net.talkgroup}</div>
+                            <div class="card-type ${net.type.toLowerCase()}">${net.type}</div>
+                        </div>
+                        <div class="card-title">${net.name}</div>
+                        <div class="card-description">${net.description}</div>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <span class="detail-label">Schedule</span>
+                                <span class="detail-value">${net.schedule}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-label">Next</span>
+                                <span class="detail-value">${formatNetDate(nextDate)}</span>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function generateTalkgroups() {
+            const container = document.getElementById('talkgroupsContainer');
+            container.className = isMobileView ? 'list-container' : 'grid-container';
+            container.innerHTML = '';
+            
+            data.talkgroups?.forEach(tg => {
+                if (isMobileView) {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-header" onclick="toggleItem(this.parentElement)">
+                            <div>
+                                <div class="item-title">${tg.name}</div>
+                                <div class="item-subtitle">TG ${tg.id}</div>
+                            </div>
+                            <div class="item-toggle">🔽</div>
+                        </div>
+                        <div class="item-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Type</span>
+                                <span class="detail-value">${tg.type}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Timeslot</span>
+                                <span class="detail-value">${tg.timeslot}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value">${tg.status}</span>
+                            </div>
+                            ${tg.note ? `<div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(231, 76, 60, 0.1); border-radius: 4px; color: #e74c3c; font-size: 0.75rem;">⚠️ ${tg.note}</div>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(item);
+                } else {
+                    const card = document.createElement('div');
+                    card.className = `card ${tg.type.toLowerCase()}`;
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="card-id">TG ${tg.id}</div>
+                            <div class="card-type ${tg.type.toLowerCase()}">${tg.type}</div>
+                        </div>
+                        <div class="card-title">${tg.name}</div>
+                        <div class="card-description">${tg.description}</div>
+                        <div class="card-details">
+                            <div class="card-detail">
+                                <span class="detail-label">Timeslot</span>
+                                <span class="detail-value">${tg.timeslot}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value">${tg.status}</span>
+                            </div>
+                        </div>
+                        ${tg.note ? `<div class="card-note">⚠️ ${tg.note}</div>` : ''}
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function generateResources() {
+            const container = document.getElementById('resourcesContainer');
+            container.className = isMobileView ? 'list-container' : 'grid-container';
+            container.innerHTML = '';
+            
+            data.resources?.forEach(resource => {
+                if (isMobileView) {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <div class="item-header" onclick="window.open('${resource.url}', '_blank')">
+                            <div>
+                                <div class="item-title">${resource.title}</div>
+                                <div class="item-subtitle">${resource.description}</div>
+                            </div>
+                            <div style="color: var(--btn-primary); font-size: 1.2rem;">→</div>
+                        </div>
+                    `;
+                    container.appendChild(item);
+                } else {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="card-title">${resource.title}</div>
+                        <div class="card-description">${resource.description}</div>
+                        <div class="card-links">
+                            <a href="${resource.url}" class="link-btn" target="_blank">Visit Site</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        // Utility functions
         function getNextNetDate(net) {
             const now = new Date();
             let next = new Date();
             
             if (net.recurring === 'weekly') {
-                // Find next occurrence of the day of week
                 const daysUntilNext = (net.dayOfWeek - now.getDay() + 7) % 7;
                 next.setDate(now.getDate() + (daysUntilNext === 0 ? 7 : daysUntilNext));
             } else if (net.recurring === 'monthly') {
-                // Find next first day of month
                 if (now.getDate() > net.dayOfMonth) {
                     next.setMonth(now.getMonth() + 1);
                 }
@@ -1000,7 +864,6 @@
             const [hour, minute] = net.time.split(':');
             next.setHours(parseInt(hour), parseInt(minute), 0, 0);
             
-            // If the time has passed today, move to next occurrence
             if (next <= now) {
                 if (net.recurring === 'weekly') {
                     next.setDate(next.getDate() + 7);
@@ -1012,175 +875,14 @@
             return next;
         }
 
-        // Format date for display
         function formatNetDate(date) {
             return date.toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long', 
-                day: 'numeric',
-                year: 'numeric'
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
             });
         }
 
-        // Generate net schedule cards
-        function generateNetCards() {
-            const container = document.getElementById('netContainer');
-            const grid = document.createElement('div');
-            grid.className = 'net-grid';
-            
-            nets.forEach(net => {
-                const nextDate = getNextNetDate(net);
-                const card = document.createElement('div');
-                card.className = `net-card ${net.type.toLowerCase()}`;
-                card.dataset.netId = net.id;
-                
-                card.innerHTML = `
-                    <div class="compact-header" onclick="toggleCompactCard(this.parentElement, 'net', '${net.id}')">
-                        <div>
-                            <div class="compact-title">${net.name}</div>
-                            <div class="compact-subtitle">TG ${net.talkgroup}</div>
-                        </div>
-                        <div class="compact-toggle">🔽</div>
-                    </div>
-                    <div class="compact-content">
-                        <div class="net-header">
-                            <div>
-                                <div class="net-name">${net.name}</div>
-                            </div>
-                            <div class="net-type ${net.type.toLowerCase()}">${net.type}</div>
-                        </div>
-                        
-                        <div class="net-schedule">
-                            <span class="net-schedule-icon">📅</span>
-                            <span class="net-schedule-text">${net.schedule}</span>
-                        </div>
-                        
-                        <div class="net-frequency">
-                            <span class="net-tg-label">Talk Group:</span>
-                            <span class="net-tg">TG ${net.talkgroup}</span>
-                        </div>
-                        
-                        <div class="net-description">${net.description}</div>
-                        
-                        <div class="net-next ${net.type.toLowerCase()}">
-                            <span>📡</span>
-                            <span>Next: ${formatNetDate(nextDate)}</span>
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-                
-                // Restore collapsed state
-                const savedState = localStorage.getItem(`net-${net.id}`);
-                if (savedState === 'collapsed') {
-                    card.classList.add('collapsed');
-                    card.querySelector('.compact-toggle').classList.add('collapsed');
-                }
-            });
-            
-            container.appendChild(grid);
-        }
-
-        // Talk group data
-        const talkgroups = [
-            {
-                "id": "31285",
-                "name": "Northeast Mississippi",
-                "description": "Regional communications for northeast Mississippi including Corinth, Tupelo, Amory, Oxford, New Albany, Starkville and surrounding areas. Please limit traffic to NE MS region only.",
-                "type": "Regional",
-                "timeslot": "1 or 2",
-                "status": "Static on local repeaters"
-            },
-            {
-                "id": "3128",
-                "name": "Mississippi Statewide",
-                "description": "Mississippi statewide communications. Use for short conversations and as a calling channel. Move to TAC groups for extended QSOs.",
-                "type": "Statewide",
-                "timeslot": "1 or 2",
-                "status": "Dynamic"
-            },
-            {
-                "id": "93",
-                "name": "North America",
-                "description": "Continental North America talkgroup. All North American stations welcome. Popular for regional nets and general conversation.",
-                "type": "Continental",
-                "timeslot": "1 or 2",
-                "status": "Dynamic"
-            },
-            {
-                "id": "91",
-                "name": "Worldwide",
-                "description": "Global communications talkgroup. Very active with stations from around the world. Use with caution on repeaters due to high traffic volume.",
-                "type": "Worldwide",
-                "timeslot": "1 or 2",
-                "status": "Dynamic"
-            },
-            {
-                "id": "9990",
-                "name": "Parrot (Echo Test)",
-                "description": "Echo test service - make a PRIVATE call to 9990 to test your audio and connection. Your transmission will be echoed back to you. Maximum 90 seconds.",
-                "type": "Service",
-                "timeslot": "1 or 2",
-                "status": "Private Call",
-                "note": "Configure as PRIVATE CALL, not Group Call"
-            }
-        ];
-
-        // Generate talkgroup cards
-        function generateTalkgroupCards() {
-            const container = document.getElementById('talkgroupContainer');
-            const grid = document.createElement('div');
-            grid.className = 'talkgroup-grid';
-            
-            talkgroups.forEach(tg => {
-                const card = document.createElement('div');
-                card.className = `talkgroup-card ${tg.type.toLowerCase()}`;
-                card.dataset.tgId = tg.id;
-                
-                card.innerHTML = `
-                    <div class="compact-header" onclick="toggleCompactCard(this.parentElement, 'talkgroup', '${tg.id}')">
-                        <div>
-                            <div class="compact-title">${tg.name}</div>
-                            <div class="compact-subtitle">TG ${tg.id}</div>
-                        </div>
-                        <div class="compact-toggle">🔽</div>
-                    </div>
-                    <div class="compact-content">
-                        <div class="talkgroup-header">
-                            <div class="talkgroup-id">TG ${tg.id}</div>
-                            <div class="talkgroup-type ${tg.type.toLowerCase()}">${tg.type}</div>
-                        </div>
-                        <div class="talkgroup-name">${tg.name}</div>
-                        <div class="talkgroup-description">${tg.description}</div>
-                        <div class="talkgroup-details">
-                            <div class="talkgroup-detail">
-                                <span class="talkgroup-detail-label">Timeslot</span>
-                                <span class="talkgroup-detail-value">${tg.timeslot}</span>
-                            </div>
-                            <div class="talkgroup-detail">
-                                <span class="talkgroup-detail-label">Status</span>
-                                <span class="talkgroup-detail-value">${tg.status}</span>
-                            </div>
-                        </div>
-                        ${tg.note ? `<div class="talkgroup-note">⚠️ ${tg.note}</div>` : ''}
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-                
-                // Restore collapsed state
-                const savedState = localStorage.getItem(`talkgroup-${tg.id}`);
-                if (savedState === 'collapsed') {
-                    card.classList.add('collapsed');
-                    card.querySelector('.compact-toggle').classList.add('collapsed');
-                }
-            });
-            
-            container.appendChild(grid);
-        }
-
-        // Section collapse/expand functionality
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
             const toggle = section.previousElementSibling.querySelector('.section-toggle');
@@ -1188,51 +890,86 @@
             section.classList.toggle('collapsed');
             toggle.classList.toggle('collapsed');
             
-            // Save state to localStorage
-            const isCollapsed = section.classList.contains('collapsed');
-            localStorage.setItem(`section-${sectionId}`, isCollapsed ? 'collapsed' : 'expanded');
+            localStorage.setItem(`section-${sectionId}`, section.classList.contains('collapsed') ? 'collapsed' : 'expanded');
         }
 
-        // Toggle compact card (nets/talkgroups in simple mode)
-        function toggleCompactCard(cardElement, type, id) {
-            const toggle = cardElement.querySelector('.compact-toggle');
-            cardElement.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
+        function toggleItem(itemElement) {
+            const toggle = itemElement.querySelector('.item-toggle');
+            const details = itemElement.querySelector('.item-details');
             
-            // Save state
-            const isCollapsed = cardElement.classList.contains('collapsed');
-            localStorage.setItem(`${type}-${id}`, isCollapsed ? 'collapsed' : 'expanded');
+            details.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
         }
 
-        // Update resource cards for compact mode
-        function updateResourceCards() {
-            const resourceCards = document.querySelectorAll('.resource-card');
-            resourceCards.forEach(card => {
-                const link = card.querySelector('.resource-link');
-                const title = card.querySelector('.resource-title').textContent;
-                if (document.getElementById('simpleMode').classList.contains('hidden')) {
-                    // Map mode - full button
-                    link.textContent = 'Visit Site';
-                } else {
-                    // Simple mode - just site name
-                    link.textContent = title;
-                }
+        function initDarkMode() {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            darkModeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+            
+            darkModeToggle.addEventListener('click', function() {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                darkModeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
             });
         }
-        function toggleRepeaterCard(cardElement) {
-            const toggle = cardElement.querySelector('.repeater-toggle');
-            cardElement.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
-            
-            // Save state
-            const repeaterId = cardElement.dataset.repeaterId;
-            const isCollapsed = cardElement.classList.contains('collapsed');
-            localStorage.setItem(`repeater-${repeaterId}`, isCollapsed ? 'collapsed' : 'expanded');
+
+        function initToggles() {
+            // View toggle
+            document.getElementById('viewToggle').addEventListener('click', function() {
+                isMobileView = !isMobileView;
+                this.textContent = isMobileView ? 'Desktop View' : 'Mobile View';
+                this.classList.toggle('active', isMobileView);
+                
+                document.body.className = isMobileView ? 'mobile-view' : 'desktop-view';
+                generateContent();
+                
+                localStorage.setItem('viewMode', isMobileView ? 'mobile' : 'desktop');
+            });
+
+            // Map toggle
+            document.getElementById('mapToggle').addEventListener('click', function() {
+                isMapVisible = !isMapVisible;
+                this.textContent = isMapVisible ? 'Hide Map' : 'Show Map';
+                this.classList.toggle('active', !isMapVisible);
+                
+                document.getElementById('mapContainer').classList.toggle('hidden', !isMapVisible);
+                
+                if (isMapVisible && map) {
+                    setTimeout(() => map.invalidateSize(), 100);
+                }
+                
+                localStorage.setItem('mapVisible', isMapVisible ? 'true' : 'false');
+            });
         }
 
-        // Restore section states from localStorage
-        function restoreSectionStates() {
-            ['netSection', 'talkgroupSection', 'resourcesSection'].forEach(sectionId => {
+        function restoreSettings() {
+            // Restore view mode
+            const savedView = localStorage.getItem('viewMode');
+            if (savedView === 'mobile') {
+                isMobileView = true;
+                document.getElementById('viewToggle').textContent = 'Desktop View';
+                document.getElementById('viewToggle').classList.add('active');
+                document.body.className = 'mobile-view';
+            } else {
+                document.body.className = 'desktop-view';
+            }
+
+            // Restore map visibility
+            const savedMapState = localStorage.getItem('mapVisible');
+            if (savedMapState === 'false') {
+                isMapVisible = false;
+                document.getElementById('mapToggle').textContent = 'Show Map';
+                document.getElementById('mapToggle').classList.add('active');
+                document.getElementById('mapContainer').classList.add('hidden');
+            }
+
+            // Restore section states
+            ['repeatersContent', 'netsContent', 'talkgroupsContent', 'resourcesContent'].forEach(sectionId => {
                 const state = localStorage.getItem(`section-${sectionId}`);
                 if (state === 'collapsed') {
                     const section = document.getElementById(sectionId);
@@ -1243,186 +980,14 @@
             });
         }
 
-        // Header scroll behavior
-        function initScrollBehavior() {
-            let lastScrollTop = 0;
-            const header = document.querySelector('header');
-            
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
-                if (scrollTop > 100) {
-                    header.classList.add('collapsed');
-                } else {
-                    header.classList.remove('collapsed');
-                }
-                
-                lastScrollTop = scrollTop;
-            });
-        }
-        function initDarkMode() {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateDarkModeIcon(savedTheme);
-            
-            darkModeToggle.addEventListener('click', function() {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                updateDarkModeIcon(newTheme);
-            });
-        }
-
-        function updateDarkModeIcon(theme) {
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            darkModeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-        }
-
-        // Initialize map
-        function initMap() {
-            map = L.map('map').setView([34.4, -88.8], 8);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            // Add repeater markers
-            repeaters.forEach(repeater => {
-                const marker = L.marker([repeater.lat, repeater.lng]).addTo(map);
-                
-                const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
-                const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${repeater.rbId.includes('_') ? repeater.rbId.split('_')[0] : (repeater.county.includes('TN') ? '47' : '28')}&ID=${repeater.rbId.includes('_') ? repeater.rbId.split('_')[1] : repeater.rbId}`;
-                
-                const popupContent = `
-                    <div class="popup-title">${repeater.callsign} - ${repeater.location}</div>
-                    <div class="popup-details">
-                        <strong>Frequency:</strong> ${repeater.frequency}<br>
-                        <strong>County:</strong> ${repeater.county}<br>
-                        <strong>Color Code:</strong> ${repeater.colorCode}<br>
-                        <strong>Status:</strong> ${repeater.status}<br>
-                        <strong>Last Update:</strong> ${repeater.lastUpdate}<br>
-                        <strong>Description:</strong> ${repeater.description}
-                    </div>
-                    <div class="popup-links">
-                        <a href="${bmLink}" target="_blank" class="link-btn">Brandmeister</a>
-                        <a href="${rbLink}" target="_blank" class="link-btn">RepeaterBook</a>
-                    </div>
-                `;
-                
-                marker.bindPopup(popupContent);
-            });
-        }
-
-        // Generate simple mode cards
-        function generateSimpleCards() {
-            const container = document.getElementById('repeaterList');
-            
-            repeaters.forEach(repeater => {
-                const card = document.createElement('div');
-                card.className = 'repeater-card';
-                card.dataset.repeaterId = repeater.id;
-                
-                const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
-                const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${repeater.rbId.includes('_') ? repeater.rbId.split('_')[0] : (repeater.county.includes('TN') ? '47' : '28')}&ID=${repeater.rbId.includes('_') ? repeater.rbId.split('_')[1] : repeater.rbId}`;
-                
-                card.innerHTML = `
-                    <div class="repeater-header" onclick="toggleRepeaterCard(this.parentElement)">
-                        <div class="repeater-title">${repeater.callsign} - ${repeater.location}</div>
-                        <div class="repeater-toggle">🔽</div>
-                    </div>
-                    <div class="repeater-content">
-                        <div class="repeater-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Frequency</span>
-                                <span class="detail-value">${repeater.frequency}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">County</span>
-                                <span class="detail-value">${repeater.county}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Color Code</span>
-                                <span class="detail-value">${repeater.colorCode}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Status</span>
-                                <span class="detail-value">${repeater.status}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">BM ID</span>
-                                <span class="detail-value">${repeater.bmId}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Last Update</span>
-                                <span class="detail-value">${repeater.lastUpdate}</span>
-                            </div>
-                        </div>
-                        <div class="repeater-links">
-                            <a href="${bmLink}" class="link-btn" target="_blank">Brandmeister</a>
-                            <a href="${rbLink}" class="link-btn" target="_blank">RepeaterBook</a>
-                        </div>
-                    </div>
-                `;
-                
-                container.appendChild(card);
-                
-                // Restore collapsed state
-                const savedState = localStorage.getItem(`repeater-${repeater.id}`);
-                if (savedState === 'collapsed') {
-                    card.classList.add('collapsed');
-                    card.querySelector('.repeater-toggle').classList.add('collapsed');
-                }
-            });
-        }
-
-        // Mode toggle functionality
-        document.getElementById('modeToggle').addEventListener('click', function() {
-            const mapContainer = document.getElementById('mapContainer');
-            const simpleMode = document.getElementById('simpleMode');
-            const toggleBtn = document.getElementById('modeToggle');
-            const body = document.body;
-
-            if (isMapMode) {
-                // Switch to compact mode
-                mapContainer.classList.add('hidden');
-                simpleMode.classList.remove('hidden');
-                toggleBtn.textContent = 'Map Mode';
-                toggleBtn.classList.add('active');
-                body.classList.add('simple-mode');
-                isMapMode = false;
-                updateResourceCards();
-            } else {
-                // Switch to map mode
-                mapContainer.classList.remove('hidden');
-                simpleMode.classList.add('hidden');
-                toggleBtn.textContent = 'Compact Mode';
-                toggleBtn.classList.remove('active');
-                body.classList.remove('simple-mode');
-                isMapMode = true;
-                updateResourceCards();
-                
-                // Reinitialize map if needed
-                if (map) {
-                    setTimeout(() => {
-                        map.invalidateSize();
-                    }, 100);
-                }
-            }
-        });
-
-        // Initialize everything when page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadData();
             initDarkMode();
-            initScrollBehavior();
+            initToggles();
+            restoreSettings();
             initMap();
-            generateSimpleCards();
-            generateNetCards();
-            generateTalkgroupCards();
-            restoreSectionStates();
+            generateContent();
         });
     </script>
 </body>
