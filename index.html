@@ -263,6 +263,111 @@
             gap: 1.5rem;
         }
 
+        .talkgroup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .talkgroup-card {
+            background: var(--bg-color);
+            border-radius: 8px;
+            padding: 1.2rem;
+            border-left: 4px solid var(--btn-primary);
+            transition: all 0.3s ease;
+        }
+
+        .talkgroup-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+            border-left-color: var(--btn-success);
+        }
+
+        .talkgroup-card.service {
+            border-left-color: #e74c3c;
+        }
+
+        .talkgroup-card.service:hover {
+            border-left-color: #c0392b;
+        }
+
+        .talkgroup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .talkgroup-id {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--btn-primary);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+        }
+
+        .talkgroup-type {
+            background: var(--btn-primary);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .talkgroup-type.service {
+            background: #e74c3c;
+        }
+
+        .talkgroup-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .talkgroup-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+        }
+
+        .talkgroup-details {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+        }
+
+        .talkgroup-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .talkgroup-detail-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .talkgroup-detail-value {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .talkgroup-note {
+            margin-top: 0.8rem;
+            padding: 0.6rem;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 6px;
+            color: #e74c3c;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
         .resource-card {
             background: var(--bg-color);
             border-radius: 8px;
@@ -455,6 +560,13 @@
             </div>
 
             <div class="resources-section">
+                <h2 class="resources-title">DMR Talk Groups</h2>
+                <div id="talkgroupContainer">
+                    <!-- Talk groups will be loaded here -->
+                </div>
+            </div>
+
+            <div class="resources-section">
                 <h2 class="resources-title">Essential DMR Resources</h2>
                 <div class="resources-grid">
                     <div class="resource-card">
@@ -560,6 +672,87 @@
 
         let map;
         let isMapMode = true;
+
+        // Talk group data
+        const talkgroups = [
+            {
+                "id": "31285",
+                "name": "Northeast Mississippi",
+                "description": "Regional communications for northeast Mississippi including Corinth, Tupelo, Amory, Oxford, New Albany, Starkville and surrounding areas. Please limit traffic to NE MS region only.",
+                "type": "Regional",
+                "timeslot": "1 or 2",
+                "status": "Static on local repeaters"
+            },
+            {
+                "id": "3128",
+                "name": "Mississippi Statewide",
+                "description": "Mississippi statewide communications. Use for short conversations and as a calling channel. Move to TAC groups for extended QSOs.",
+                "type": "Statewide",
+                "timeslot": "1 or 2",
+                "status": "Dynamic"
+            },
+            {
+                "id": "93",
+                "name": "North America",
+                "description": "Continental North America talkgroup. All North American stations welcome. Popular for regional nets and general conversation.",
+                "type": "Continental",
+                "timeslot": "1 or 2",
+                "status": "Dynamic"
+            },
+            {
+                "id": "91",
+                "name": "Worldwide",
+                "description": "Global communications talkgroup. Very active with stations from around the world. Use with caution on repeaters due to high traffic volume.",
+                "type": "Worldwide",
+                "timeslot": "1 or 2",
+                "status": "Dynamic"
+            },
+            {
+                "id": "9990",
+                "name": "Parrot (Echo Test)",
+                "description": "Echo test service - make a PRIVATE call to 9990 to test your audio and connection. Your transmission will be echoed back to you. Maximum 90 seconds.",
+                "type": "Service",
+                "timeslot": "1 or 2",
+                "status": "Private Call",
+                "note": "Configure as PRIVATE CALL, not Group Call"
+            }
+        ];
+
+        // Generate talkgroup cards
+        function generateTalkgroupCards() {
+            const container = document.getElementById('talkgroupContainer');
+            const grid = document.createElement('div');
+            grid.className = 'talkgroup-grid';
+            
+            talkgroups.forEach(tg => {
+                const card = document.createElement('div');
+                card.className = `talkgroup-card ${tg.type.toLowerCase()}`;
+                
+                card.innerHTML = `
+                    <div class="talkgroup-header">
+                        <div class="talkgroup-id">TG ${tg.id}</div>
+                        <div class="talkgroup-type ${tg.type.toLowerCase()}">${tg.type}</div>
+                    </div>
+                    <div class="talkgroup-name">${tg.name}</div>
+                    <div class="talkgroup-description">${tg.description}</div>
+                    <div class="talkgroup-details">
+                        <div class="talkgroup-detail">
+                            <span class="talkgroup-detail-label">Timeslot</span>
+                            <span class="talkgroup-detail-value">${tg.timeslot}</span>
+                        </div>
+                        <div class="talkgroup-detail">
+                            <span class="talkgroup-detail-label">Status</span>
+                            <span class="talkgroup-detail-value">${tg.status}</span>
+                        </div>
+                    </div>
+                    ${tg.note ? `<div class="talkgroup-note">⚠️ ${tg.note}</div>` : ''}
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            container.appendChild(grid);
+        }
 
         // Dark mode functionality
         function initDarkMode() {
@@ -706,6 +899,7 @@
             initDarkMode();
             initMap();
             generateSimpleCards();
+            generateTalkgroupCards();
         });
     </script>
 </body>
