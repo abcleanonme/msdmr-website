@@ -136,16 +136,11 @@
         }
 
         main {
-            padding: 2rem 0;
+            padding: 1rem 0;
         }
 
         .mode-indicator {
-            text-align: center;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: var(--bg-highlight);
-            border-radius: 8px;
-            color: var(--text-light);
+            display: none;
         }
 
         #mapContainer {
@@ -165,65 +160,97 @@
             background: var(--bg-secondary);
             border-radius: 12px;
             box-shadow: 0 4px 20px var(--shadow);
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
         .repeater-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
         }
 
         .repeater-card {
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 0.8rem;
+            border-radius: 4px;
             background: var(--bg-tertiary);
             transition: all 0.3s ease;
+            overflow: hidden;
         }
 
-        .repeater-card:hover {
-            box-shadow: 0 2px 8px var(--shadow);
-            transform: translateY(-1px);
+        .repeater-card.collapsed .repeater-details,
+        .repeater-card.collapsed .repeater-links {
+            display: none;
+        }
+
+        .repeater-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0.8rem;
+            cursor: pointer;
+            user-select: none;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .repeater-header:hover {
+            background: var(--bg-highlight);
         }
 
         .repeater-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-light);
-            margin-bottom: 0.4rem;
+            margin: 0;
+        }
+
+        .repeater-toggle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .repeater-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .repeater-content {
+            padding: 0.6rem 0.8rem;
         }
 
         .repeater-details {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.2rem;
-            margin: 0.4rem 0;
-            font-size: 0.8rem;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.3rem 0.8rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.75rem;
+            line-height: 1.2;
         }
 
         .detail-item {
             display: flex;
             justify-content: space-between;
             padding: 0.1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .detail-label {
             font-weight: 500;
             color: var(--text-secondary);
+            white-space: nowrap;
         }
 
         .detail-value {
             color: var(--text-primary);
             font-weight: 500;
             text-align: right;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            font-family: 'SF Mono', 'Monaco', monospace;
         }
 
         .repeater-links {
-            margin-top: 0.5rem;
             display: flex;
-            gap: 0.4rem;
+            gap: 0.3rem;
             flex-wrap: wrap;
         }
 
@@ -231,10 +258,11 @@
             background: var(--btn-primary);
             color: white;
             text-decoration: none;
-            padding: 0.25rem 0.5rem;
+            padding: 0.2rem 0.4rem;
             border-radius: 3px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .link-btn:hover {
@@ -303,8 +331,14 @@
 
         .net-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: 1fr;
             gap: 1.2rem;
+        }
+
+        @media (min-width: 768px) {
+            .net-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
         }
 
         .net-card {
@@ -693,6 +727,7 @@
                     </svg>
                 </div>
                 <div class="controls">
+                    <div id="modeInfo" class="mode-info">Interactive Map Mode</div>
                     <button id="modeToggle" class="toggle-btn">Switch to Simple Mode</button>
                     <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
                 </div>
@@ -702,10 +737,6 @@
 
     <main>
         <div class="container">
-            <div id="modeIndicator" class="mode-indicator">
-                <strong>Interactive Map Mode:</strong> Click on repeater markers for detailed information
-            </div>
-
             <div id="mapContainer">
                 <div id="map"></div>
             </div>
@@ -1059,6 +1090,18 @@
             localStorage.setItem(`section-${sectionId}`, isCollapsed ? 'collapsed' : 'expanded');
         }
 
+        // Toggle repeater card in simple mode
+        function toggleRepeaterCard(cardElement) {
+            const toggle = cardElement.querySelector('.repeater-toggle');
+            cardElement.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+            
+            // Save state
+            const repeaterId = cardElement.dataset.repeaterId;
+            const isCollapsed = cardElement.classList.contains('collapsed');
+            localStorage.setItem(`repeater-${repeaterId}`, isCollapsed ? 'collapsed' : 'expanded');
+        }
+
         // Restore section states from localStorage
         function restoreSectionStates() {
             ['netSection', 'talkgroupSection', 'resourcesSection'].forEach(sectionId => {
@@ -1069,6 +1112,24 @@
                     section.classList.add('collapsed');
                     toggle.classList.add('collapsed');
                 }
+            });
+        }
+
+        // Header scroll behavior
+        function initScrollBehavior() {
+            let lastScrollTop = 0;
+            const header = document.querySelector('header');
+            
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                if (scrollTop > 100) {
+                    header.classList.add('collapsed');
+                } else {
+                    header.classList.remove('collapsed');
+                }
+                
+                lastScrollTop = scrollTop;
             });
         }
         function initDarkMode() {
@@ -1135,45 +1196,58 @@
             repeaters.forEach(repeater => {
                 const card = document.createElement('div');
                 card.className = 'repeater-card';
+                card.dataset.repeaterId = repeater.id;
                 
                 const bmLink = `https://brandmeister.network/?page=repeater&id=${repeater.bmId}`;
                 const rbLink = `https://www.repeaterbook.com/repeaters/details.php?state_id=${repeater.rbId.includes('_') ? repeater.rbId.split('_')[0] : (repeater.county.includes('TN') ? '47' : '28')}&ID=${repeater.rbId.includes('_') ? repeater.rbId.split('_')[1] : repeater.rbId}`;
                 
                 card.innerHTML = `
-                    <div class="repeater-title">${repeater.callsign} - ${repeater.location}</div>
-                    <div class="repeater-details">
-                        <div class="detail-item">
-                            <span class="detail-label">Frequency:</span>
-                            <span class="detail-value">${repeater.frequency}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">County:</span>
-                            <span class="detail-value">${repeater.county}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Color Code:</span>
-                            <span class="detail-value">${repeater.colorCode}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Status:</span>
-                            <span class="detail-value">${repeater.status}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">BM ID:</span>
-                            <span class="detail-value">${repeater.bmId}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Last Update:</span>
-                            <span class="detail-value">${repeater.lastUpdate}</span>
-                        </div>
+                    <div class="repeater-header" onclick="toggleRepeaterCard(this.parentElement)">
+                        <div class="repeater-title">${repeater.callsign} - ${repeater.location}</div>
+                        <div class="repeater-toggle">🔽</div>
                     </div>
-                    <div class="repeater-links">
-                        <a href="${bmLink}" class="link-btn" target="_blank">Brandmeister</a>
-                        <a href="${rbLink}" class="link-btn" target="_blank">RepeaterBook</a>
+                    <div class="repeater-content">
+                        <div class="repeater-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Frequency</span>
+                                <span class="detail-value">${repeater.frequency}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">County</span>
+                                <span class="detail-value">${repeater.county}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Color Code</span>
+                                <span class="detail-value">${repeater.colorCode}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value">${repeater.status}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">BM ID</span>
+                                <span class="detail-value">${repeater.bmId}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Last Update</span>
+                                <span class="detail-value">${repeater.lastUpdate}</span>
+                            </div>
+                        </div>
+                        <div class="repeater-links">
+                            <a href="${bmLink}" class="link-btn" target="_blank">Brandmeister</a>
+                            <a href="${rbLink}" class="link-btn" target="_blank">RepeaterBook</a>
+                        </div>
                     </div>
                 `;
                 
                 container.appendChild(card);
+                
+                // Restore collapsed state
+                const savedState = localStorage.getItem(`repeater-${repeater.id}`);
+                if (savedState === 'collapsed') {
+                    card.classList.add('collapsed');
+                    card.querySelector('.repeater-toggle').classList.add('collapsed');
+                }
             });
         }
 
@@ -1181,14 +1255,14 @@
         document.getElementById('modeToggle').addEventListener('click', function() {
             const mapContainer = document.getElementById('mapContainer');
             const simpleMode = document.getElementById('simpleMode');
-            const modeIndicator = document.getElementById('modeIndicator');
+            const modeInfo = document.getElementById('modeInfo');
             const toggleBtn = document.getElementById('modeToggle');
 
             if (isMapMode) {
                 // Switch to simple mode
                 mapContainer.classList.add('hidden');
                 simpleMode.classList.remove('hidden');
-                modeIndicator.innerHTML = '<strong>Simple Text Mode:</strong> Compact listing of all repeaters';
+                modeInfo.textContent = 'Compact Simple Mode';
                 toggleBtn.textContent = 'Switch to Map Mode';
                 toggleBtn.classList.add('active');
                 isMapMode = false;
@@ -1196,7 +1270,7 @@
                 // Switch to map mode
                 mapContainer.classList.remove('hidden');
                 simpleMode.classList.add('hidden');
-                modeIndicator.innerHTML = '<strong>Interactive Map Mode:</strong> Click on repeater markers for detailed information';
+                modeInfo.textContent = 'Interactive Map Mode';
                 toggleBtn.textContent = 'Switch to Simple Mode';
                 toggleBtn.classList.remove('active');
                 isMapMode = true;
@@ -1213,6 +1287,7 @@
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initDarkMode();
+            initScrollBehavior();
             initMap();
             generateSimpleCards();
             generateNetCards();
