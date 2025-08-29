@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>North Mississippi DMR Network</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M20,80 Q50,20 80,80 Q50,60 20,80' fill='%23CC2936'/><path d='M25,75 Q50,25 75,75 Q50,55 25,75' fill='none' stroke='%23FFD23F' stroke-width='2'/><path d='M30,70 Q50,30 70,70 Q50,50 30,70' fill='none' stroke='%232E86AB' stroke-width='2'/><rect x='48' y='35' width='4' height='20' rx='2' fill='%23CC2936'/><rect x='45' y='32' width='10' height='2' rx='1' fill='%23CC2936'/><circle cx='50' cy='30' r='2' fill='%23CC2936'/></svg>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
@@ -549,14 +550,68 @@
             font-weight: 500;
         }
 
-        .talkgroup-note {
-            margin-top: 0.8rem;
-            padding: 0.6rem;
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 6px;
-            color: #e74c3c;
+        .simple-mode .net-grid,
+        .simple-mode .talkgroup-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+
+        .simple-mode .net-card,
+        .simple-mode .talkgroup-card {
+            overflow: hidden;
+        }
+
+        .simple-mode .net-card.collapsed .net-schedule,
+        .simple-mode .net-card.collapsed .net-frequency,
+        .simple-mode .net-card.collapsed .net-description,
+        .simple-mode .net-card.collapsed .net-next,
+        .simple-mode .talkgroup-card.collapsed .talkgroup-description,
+        .simple-mode .talkgroup-card.collapsed .talkgroup-details,
+        .simple-mode .talkgroup-card.collapsed .talkgroup-note {
+            display: none;
+        }
+
+        .simple-mode .compact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0.8rem;
+            cursor: pointer;
+            user-select: none;
+            background: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .simple-mode .compact-header:hover {
+            background: var(--bg-highlight);
+        }
+
+        .simple-mode .compact-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .simple-mode .compact-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'SF Mono', 'Monaco', monospace;
+        }
+
+        .simple-mode .compact-toggle {
             font-size: 0.8rem;
-            font-weight: 500;
+            color: var(--text-secondary);
+            transition: transform 0.3s ease;
+        }
+
+        .simple-mode .compact-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .simple-mode .compact-content {
+            padding: 0.6rem 0.8rem;
         }
 
         .resource-card {
@@ -594,6 +649,11 @@
             border-radius: 6px;
             font-weight: 500;
             transition: all 0.3s ease;
+        }
+
+        .simple-mode .resource-link {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
         }
 
         .resource-link:hover {
@@ -635,6 +695,16 @@
             #map {
                 height: 400px;
             }
+        }
+
+        .talkgroup-note {
+            margin-top: 0.8rem;
+            padding: 0.6rem;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 6px;
+            color: #e74c3c;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
 
         .leaflet-popup-content {
@@ -727,8 +797,7 @@
                     </svg>
                 </div>
                 <div class="controls">
-                    <div id="modeInfo" class="mode-info">Interactive Map Mode</div>
-                    <button id="modeToggle" class="toggle-btn">Switch to Simple Mode</button>
+                    <button id="modeToggle" class="toggle-btn">Compact Mode</button>
                     <button id="darkModeToggle" class="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
                 </div>
             </div>
@@ -963,34 +1032,51 @@
                 const nextDate = getNextNetDate(net);
                 const card = document.createElement('div');
                 card.className = `net-card ${net.type.toLowerCase()}`;
+                card.dataset.netId = net.id;
                 
                 card.innerHTML = `
-                    <div class="net-header">
+                    <div class="compact-header" onclick="toggleCompactCard(this.parentElement, 'net', '${net.id}')">
                         <div>
-                            <div class="net-name">${net.name}</div>
+                            <div class="compact-title">${net.name}</div>
+                            <div class="compact-subtitle">TG ${net.talkgroup}</div>
                         </div>
-                        <div class="net-type ${net.type.toLowerCase()}">${net.type}</div>
+                        <div class="compact-toggle">🔽</div>
                     </div>
-                    
-                    <div class="net-schedule">
-                        <span class="net-schedule-icon">📅</span>
-                        <span class="net-schedule-text">${net.schedule}</span>
-                    </div>
-                    
-                    <div class="net-frequency">
-                        <span class="net-tg-label">Talk Group:</span>
-                        <span class="net-tg">TG ${net.talkgroup}</span>
-                    </div>
-                    
-                    <div class="net-description">${net.description}</div>
-                    
-                    <div class="net-next ${net.type.toLowerCase()}">
-                        <span>📡</span>
-                        <span>Next: ${formatNetDate(nextDate)}</span>
+                    <div class="compact-content">
+                        <div class="net-header">
+                            <div>
+                                <div class="net-name">${net.name}</div>
+                            </div>
+                            <div class="net-type ${net.type.toLowerCase()}">${net.type}</div>
+                        </div>
+                        
+                        <div class="net-schedule">
+                            <span class="net-schedule-icon">📅</span>
+                            <span class="net-schedule-text">${net.schedule}</span>
+                        </div>
+                        
+                        <div class="net-frequency">
+                            <span class="net-tg-label">Talk Group:</span>
+                            <span class="net-tg">TG ${net.talkgroup}</span>
+                        </div>
+                        
+                        <div class="net-description">${net.description}</div>
+                        
+                        <div class="net-next ${net.type.toLowerCase()}">
+                            <span>📡</span>
+                            <span>Next: ${formatNetDate(nextDate)}</span>
+                        </div>
                     </div>
                 `;
                 
                 grid.appendChild(card);
+                
+                // Restore collapsed state
+                const savedState = localStorage.getItem(`net-${net.id}`);
+                if (savedState === 'collapsed') {
+                    card.classList.add('collapsed');
+                    card.querySelector('.compact-toggle').classList.add('collapsed');
+                }
             });
             
             container.appendChild(grid);
@@ -1050,28 +1136,45 @@
             talkgroups.forEach(tg => {
                 const card = document.createElement('div');
                 card.className = `talkgroup-card ${tg.type.toLowerCase()}`;
+                card.dataset.tgId = tg.id;
                 
                 card.innerHTML = `
-                    <div class="talkgroup-header">
-                        <div class="talkgroup-id">TG ${tg.id}</div>
-                        <div class="talkgroup-type ${tg.type.toLowerCase()}">${tg.type}</div>
-                    </div>
-                    <div class="talkgroup-name">${tg.name}</div>
-                    <div class="talkgroup-description">${tg.description}</div>
-                    <div class="talkgroup-details">
-                        <div class="talkgroup-detail">
-                            <span class="talkgroup-detail-label">Timeslot</span>
-                            <span class="talkgroup-detail-value">${tg.timeslot}</span>
+                    <div class="compact-header" onclick="toggleCompactCard(this.parentElement, 'talkgroup', '${tg.id}')">
+                        <div>
+                            <div class="compact-title">${tg.name}</div>
+                            <div class="compact-subtitle">TG ${tg.id}</div>
                         </div>
-                        <div class="talkgroup-detail">
-                            <span class="talkgroup-detail-label">Status</span>
-                            <span class="talkgroup-detail-value">${tg.status}</span>
-                        </div>
+                        <div class="compact-toggle">🔽</div>
                     </div>
-                    ${tg.note ? `<div class="talkgroup-note">⚠️ ${tg.note}</div>` : ''}
+                    <div class="compact-content">
+                        <div class="talkgroup-header">
+                            <div class="talkgroup-id">TG ${tg.id}</div>
+                            <div class="talkgroup-type ${tg.type.toLowerCase()}">${tg.type}</div>
+                        </div>
+                        <div class="talkgroup-name">${tg.name}</div>
+                        <div class="talkgroup-description">${tg.description}</div>
+                        <div class="talkgroup-details">
+                            <div class="talkgroup-detail">
+                                <span class="talkgroup-detail-label">Timeslot</span>
+                                <span class="talkgroup-detail-value">${tg.timeslot}</span>
+                            </div>
+                            <div class="talkgroup-detail">
+                                <span class="talkgroup-detail-label">Status</span>
+                                <span class="talkgroup-detail-value">${tg.status}</span>
+                            </div>
+                        </div>
+                        ${tg.note ? `<div class="talkgroup-note">⚠️ ${tg.note}</div>` : ''}
+                    </div>
                 `;
                 
                 grid.appendChild(card);
+                
+                // Restore collapsed state
+                const savedState = localStorage.getItem(`talkgroup-${tg.id}`);
+                if (savedState === 'collapsed') {
+                    card.classList.add('collapsed');
+                    card.querySelector('.compact-toggle').classList.add('collapsed');
+                }
             });
             
             container.appendChild(grid);
@@ -1090,7 +1193,32 @@
             localStorage.setItem(`section-${sectionId}`, isCollapsed ? 'collapsed' : 'expanded');
         }
 
-        // Toggle repeater card in simple mode
+        // Toggle compact card (nets/talkgroups in simple mode)
+        function toggleCompactCard(cardElement, type, id) {
+            const toggle = cardElement.querySelector('.compact-toggle');
+            cardElement.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+            
+            // Save state
+            const isCollapsed = cardElement.classList.contains('collapsed');
+            localStorage.setItem(`${type}-${id}`, isCollapsed ? 'collapsed' : 'expanded');
+        }
+
+        // Update resource cards for compact mode
+        function updateResourceCards() {
+            const resourceCards = document.querySelectorAll('.resource-card');
+            resourceCards.forEach(card => {
+                const link = card.querySelector('.resource-link');
+                const title = card.querySelector('.resource-title').textContent;
+                if (document.getElementById('simpleMode').classList.contains('hidden')) {
+                    // Map mode - full button
+                    link.textContent = 'Visit Site';
+                } else {
+                    // Simple mode - just site name
+                    link.textContent = title;
+                }
+            });
+        }
         function toggleRepeaterCard(cardElement) {
             const toggle = cardElement.querySelector('.repeater-toggle');
             cardElement.classList.toggle('collapsed');
@@ -1255,25 +1383,27 @@
         document.getElementById('modeToggle').addEventListener('click', function() {
             const mapContainer = document.getElementById('mapContainer');
             const simpleMode = document.getElementById('simpleMode');
-            const modeInfo = document.getElementById('modeInfo');
             const toggleBtn = document.getElementById('modeToggle');
+            const body = document.body;
 
             if (isMapMode) {
-                // Switch to simple mode
+                // Switch to compact mode
                 mapContainer.classList.add('hidden');
                 simpleMode.classList.remove('hidden');
-                modeInfo.textContent = 'Compact Simple Mode';
-                toggleBtn.textContent = 'Switch to Map Mode';
+                toggleBtn.textContent = 'Map Mode';
                 toggleBtn.classList.add('active');
+                body.classList.add('simple-mode');
                 isMapMode = false;
+                updateResourceCards();
             } else {
                 // Switch to map mode
                 mapContainer.classList.remove('hidden');
                 simpleMode.classList.add('hidden');
-                modeInfo.textContent = 'Interactive Map Mode';
-                toggleBtn.textContent = 'Switch to Simple Mode';
+                toggleBtn.textContent = 'Compact Mode';
                 toggleBtn.classList.remove('active');
+                body.classList.remove('simple-mode');
                 isMapMode = true;
+                updateResourceCards();
                 
                 // Reinitialize map if needed
                 if (map) {
