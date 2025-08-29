@@ -1,0 +1,28 @@
+{
+  "nets": [
+    {
+      "id": "skywarn",
+      "name": "Mid-South SKYWARN Net",
+      "type": "Emergency",
+      "schedule": "1st day of each month at 7:00 PM CST",
+      "talkgroup": "314431",
+      "description": "Monthly severe weather preparedness net covering the Mid-South region. Focus on SKYWARN spotter training and severe weather communications.",
+      "recurring": "monthly",
+      "dayOfMonth": 1,
+      "time": "19:00",
+      "timezone": "CST"
+    },
+    {
+      "id": "midsouth",
+      "name": "Mid-South DMR Net",
+      "type": "General", 
+      "schedule": "Wednesdays at 7:30 PM CST",
+      "talkgroup": "31471",
+      "description": "Weekly general DMR net for the Mid-South area. Open discussion, check-ins, and DMR technical topics welcome.",
+      "recurring": "weekly",
+      "dayOfWeek": 3,
+      "time": "19:30",
+      "timezone": "CST"
+    }
+  ]
+}

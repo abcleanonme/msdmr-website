@@ -1,0 +1,40 @@
+{
+  "resources": [
+    {
+      "id": "brandmeister",
+      "title": "Brandmeister",
+      "description": "Global DMR network dashboard and management",
+      "url": "https://brandmeister.network/"
+    },
+    {
+      "id": "hoseline",
+      "title": "Brandmeister Hoseline",
+      "description": "Live audio stream of DMR network activity",
+      "url": "https://hose.brandmeister.network/"
+    },
+    {
+      "id": "repeaterbook",
+      "title": "RepeaterBook",
+      "description": "Comprehensive repeater database and information",
+      "url": "https://www.repeaterbook.com/"
+    },
+    {
+      "id": "aprs",
+      "title": "APRS.fi",
+      "description": "APRS tracking and real-time position reporting",
+      "url": "https://aprs.fi/"
+    },
+    {
+      "id": "dmrid",
+      "title": "DMR-ID Database",
+      "description": "Register and lookup DMR radio IDs",
+      "url": "https://radioid.net/"
+    },
+    {
+      "id": "arrl",
+      "title": "ARRL",
+      "description": "American Radio Relay League resources",
+      "url": "https://www.arrl.org/"
+    }
+  ]
+}

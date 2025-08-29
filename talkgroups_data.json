@@ -1,0 +1,45 @@
+{
+  "talkgroups": [
+    {
+      "id": "31285",
+      "name": "Northeast Mississippi",
+      "description": "Regional communications for northeast Mississippi including Corinth, Tupelo, Amory, Oxford, New Albany, Starkville and surrounding areas. Please limit traffic to NE MS region only.",
+      "type": "Regional",
+      "timeslot": "1 or 2",
+      "status": "Static on local repeaters"
+    },
+    {
+      "id": "3128",
+      "name": "Mississippi Statewide",
+      "description": "Mississippi statewide communications. Use for short conversations and as a calling channel. Move to TAC groups for extended QSOs.",
+      "type": "Statewide",
+      "timeslot": "1 or 2",
+      "status": "Dynamic"
+    },
+    {
+      "id": "93",
+      "name": "North America",
+      "description": "Continental North America talkgroup. All North American stations welcome. Popular for regional nets and general conversation.",
+      "type": "Continental",
+      "timeslot": "1 or 2",
+      "status": "Dynamic"
+    },
+    {
+      "id": "91",
+      "name": "Worldwide",
+      "description": "Global communications talkgroup. Very active with stations from around the world. Use with caution on repeaters due to high traffic volume.",
+      "type": "Worldwide",
+      "timeslot": "1 or 2",
+      "status": "Dynamic"
+    },
+    {
+      "id": "9990",
+      "name": "Parrot (Echo Test)",
+      "description": "Echo test service - make a PRIVATE call to 9990 to test your audio and connection. Your transmission will be echoed back to you. Maximum 90 seconds.",
+      "type": "Service",
+      "timeslot": "1 or 2",
+      "status": "Private Call",
+      "note": "Configure as PRIVATE CALL, not Group Call"
+    }
+  ]
+}

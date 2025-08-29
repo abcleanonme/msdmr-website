@@ -1,0 +1,64 @@
+{
+  "repeaters": [
+    {
+      "id": 1,
+      "callsign": "N5VGK",
+      "frequency": "444.950 MHz (+5 MHz)",
+      "colorCode": "1",
+      "location": "Tupelo",
+      "county": "Lee, MS",
+      "lat": 34.25759888,
+      "lng": -88.70339966,
+      "description": "Primary DMR repeater serving the Tupelo area",
+      "status": "On-Air",
+      "lastUpdate": "2025-06-12",
+      "bmId": "310974",
+      "rbId": "8033"
+    },
+    {
+      "id": 2,
+      "callsign": "KI5CMA",
+      "frequency": "444.425 MHz (+5 MHz)",
+      "colorCode": "1",
+      "location": "Oxford - Thacker Mountain",
+      "county": "Lafayette, MS",
+      "lat": 34.32809830,
+      "lng": -89.57929993,
+      "description": "DMR repeater serving Oxford and University area",
+      "status": "On-Air",
+      "lastUpdate": "2025-08-27",
+      "bmId": "314649",
+      "rbId": "18132"
+    },
+    {
+      "id": 3,
+      "callsign": "KG5JDS",
+      "frequency": "146.835 MHz (-0.6 MHz)",
+      "colorCode": "1",
+      "location": "Pontotoc - Water Tower",
+      "county": "Pontotoc, MS",
+      "lat": 34.24789810,
+      "lng": -88.99870300,
+      "description": "2-meter DMR repeater serving Pontotoc area",
+      "status": "On-Air",
+      "lastUpdate": "2025-08-27",
+      "bmId": "314627",
+      "rbId": "93"
+    },
+    {
+      "id": 4,
+      "callsign": "N5VGK",
+      "frequency": "442.075 MHz (+5 MHz)",
+      "colorCode": "1",
+      "location": "Pickwick/Counce",
+      "county": "Hardin, TN",
+      "lat": 35.0614,
+      "lng": -88.2034,
+      "description": "DMR repeater serving Pickwick Dam area",
+      "status": "On-Air",
+      "lastUpdate": "2025-08-27",
+      "bmId": "314620",
+      "rbId": "23841"
+    }
+  ]
+}
