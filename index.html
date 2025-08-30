@@ -24,6 +24,11 @@
             --btn-success-hover: #229954;
             --btn-danger: #e74c3c;
             --shadow: rgba(0,0,0,0.1);
+            --font-size-base: 1rem;
+            --font-weight-base: 400;
+            --font-size-lg: 0.95rem;
+            --font-size-sm: 0.85rem;
+            --font-size-xs: 0.75rem;
         }
 
         [data-theme="dark"] {
@@ -45,6 +50,14 @@
             --shadow: rgba(0,0,0,0.3);
         }
 
+        [data-font-size="large"] {
+            --font-size-base: 1.15rem;
+            --font-weight-base: 500;
+            --font-size-lg: 1.1rem;
+            --font-size-sm: 1rem;
+            --font-size-xs: 0.9rem;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -57,6 +70,8 @@
             color: var(--text-primary);
             background: var(--bg-color);
             transition: all 0.3s ease;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-base);
         }
 
         .container {
@@ -100,9 +115,10 @@
             padding: 0.5rem 1rem;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: var(--font-size-sm);
             transition: all 0.3s ease;
             white-space: nowrap;
+            font-weight: var(--font-weight-base);
         }
 
         .toggle-btn:hover {
@@ -237,7 +253,7 @@
         .mobile-view .item-title {
             font-weight: 600;
             color: var(--text-light);
-            font-size: 0.95rem;
+            font-size: var(--font-size-lg);
             transition: color 0.3s ease;
         }
 
@@ -246,7 +262,7 @@
         }
 
         .mobile-view .item-subtitle {
-            font-size: 0.8rem;
+            font-size: var(--font-size-sm);
             color: var(--text-secondary);
             font-family: 'SF Mono', monospace;
             margin-top: 0.2rem;
@@ -256,7 +272,7 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 0.3rem;
-            font-size: 0.8rem;
+            font-size: var(--font-size-sm);
             margin-left: 0.5rem;
             padding-left: 0.5rem;
             border-left: 2px solid var(--border-color);
@@ -280,7 +296,7 @@
         .mobile-view .detail-value {
             color: var(--text-primary);
             font-family: 'SF Mono', monospace;
-            font-size: 0.75rem;
+            font-size: var(--font-size-xs);
         }
 
         .mobile-view .item-links {
@@ -295,8 +311,9 @@
             text-decoration: none;
             padding: 0.3rem 0.6rem;
             border-radius: 4px;
-            font-size: 0.75rem;
+            font-size: var(--font-size-xs);
             transition: all 0.3s ease;
+            font-weight: var(--font-weight-base);
         }
 
         .mobile-view .link-btn:hover {
@@ -351,7 +368,7 @@
             color: white;
             padding: 0.2rem 0.6rem;
             border-radius: 12px;
-            font-size: 0.75rem;
+            font-size: var(--font-size-xs);
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -373,7 +390,7 @@
 
         .desktop-view .card-description {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: var(--font-size-lg);
             line-height: 1.5;
             margin-bottom: 0.8rem;
         }
@@ -382,7 +399,7 @@
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
-            font-size: 0.8rem;
+            font-size: var(--font-size-sm);
         }
 
         .desktop-view .card-detail {
@@ -395,7 +412,7 @@
             font-weight: 600;
             color: var(--text-secondary);
             text-transform: uppercase;
-            font-size: 0.7rem;
+            font-size: var(--font-size-xs);
         }
 
         .desktop-view .detail-value {
@@ -409,7 +426,7 @@
             background: rgba(231, 76, 60, 0.1);
             border-radius: 6px;
             color: #e74c3c;
-            font-size: 0.8rem;
+            font-size: var(--font-size-sm);
             font-weight: 500;
         }
 
@@ -426,8 +443,9 @@
             text-decoration: none;
             padding: 0.4rem 0.8rem;
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: var(--font-size-sm);
             transition: all 0.3s ease;
+            font-weight: var(--font-weight-base);
         }
 
         .desktop-view .link-btn:hover {
@@ -452,7 +470,7 @@
 
             .toggle-btn {
                 padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
+                font-size: var(--font-size-xs);
             }
 
             #map {
@@ -485,6 +503,7 @@
                 <div class="header-controls">
                     <button id="mapToggle" class="toggle-btn">Hide Map</button>
                     <button id="viewToggle" class="toggle-btn">Mobile View</button>
+                    <button id="fontToggle" class="toggle-btn">Large Text</button>
                     <button id="darkModeToggle" class="dark-mode-toggle">🌙</button>
                 </div>
             </div>
@@ -496,41 +515,8 @@
             <div id="mapContainer">
                 <div id="map"></div>
             </div>
-
-            <div id="repeatersSection" class="list-section">
-                <div class="section-header" onclick="toggleSection('repeatersContent')">
-                    <h2 class="section-title">DMR Repeaters</h2>
-                </div>
-                <div id="repeatersContent" class="section-content">
-                    <div id="repeatersContainer"></div>
-                </div>
-            </div>
-
-            <div id="netsSection" class="list-section">
-                <div class="section-header" onclick="toggleSection('netsContent')">
-                    <h2 class="section-title">Net Schedule</h2>
-                </div>
-                <div id="netsContent" class="section-content">
-                    <div id="netsContainer"></div>
-                </div>
-            </div>
-
-            <div id="talkgroupsSection" class="list-section">
-                <div class="section-header" onclick="toggleSection('talkgroupsContent')">
-                    <h2 class="section-title">DMR Talk Groups</h2>
-                </div>
-                <div id="talkgroupsContent" class="section-content">
-                    <div id="talkgroupsContainer"></div>
-                </div>
-            </div>
-
-            <div id="resourcesSection" class="list-section">
-                <div class="section-header" onclick="toggleSection('resourcesContent')">
-                    <h2 class="section-title">Essential DMR Resources</h2>
-                </div>
-                <div id="resourcesContent" class="section-content">
-                    <div id="resourcesContainer"></div>
-                </div>
+            <div id="sectionsContainer">
+                <!-- Sections will be dynamically generated -->
             </div>
         </div>
     </main>
@@ -540,7 +526,9 @@
         let map;
         let isMobileView = false;
         let isMapVisible = true;
+        let isLargeFont = false;
         let data = {};
+        let sections = [];
 
         // Detect if device is mobile
         function isMobileDevice() {
@@ -550,13 +538,15 @@
         // Load all data from JSON files
         async function loadData() {
             try {
-                const [repeaters, nets, talkgroups, resources] = await Promise.all([
+                const [sectionsData, repeaters, nets, talkgroups, resources] = await Promise.all([
+                    fetch('sections_data.json').then(r => r.json()),
                     fetch('repeaters_data.json').then(r => r.json()),
                     fetch('nets_data.json').then(r => r.json()),
                     fetch('talkgroups_data.json').then(r => r.json()),
                     fetch('resources_data.json').then(r => r.json())
                 ]);
                 
+                sections = sectionsData.sections.filter(s => s.enabled).sort((a, b) => a.order - b.order);
                 data = { 
                     repeaters: repeaters.repeaters, 
                     nets: nets.nets, 
@@ -601,16 +591,47 @@
             });
         }
 
-        // Generate content based on view mode
-        function generateContent() {
-            generateRepeaters();
-            generateNets();
-            generateTalkgroups();
-            generateResources();
+        // Generate sections dynamically
+        function generateSections() {
+            const container = document.getElementById('sectionsContainer');
+            container.innerHTML = '';
+            
+            sections.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.id = `${section.id}Section`;
+                sectionDiv.className = 'list-section';
+                
+                sectionDiv.innerHTML = `
+                    <div class="section-header" onclick="toggleSection('${section.id}Content')">
+                        <h2 class="section-title">${section.title}</h2>
+                    </div>
+                    <div id="${section.id}Content" class="section-content">
+                        <div id="${section.id}Container"></div>
+                    </div>
+                `;
+                
+                container.appendChild(sectionDiv);
+            });
         }
 
-        function generateRepeaters() {
-            const container = document.getElementById('repeatersContainer');
+        // Generate content based on view mode
+        function generateContent() {
+            sections.forEach(section => {
+                const generator = {
+                    'repeaters': generateRepeaters,
+                    'nets': generateNets,
+                    'talkgroups': generateTalkgroups,
+                    'resources': generateResources
+                }[section.dataSource];
+                
+                if (generator) {
+                    generator(section.id);
+                }
+            });
+        }
+
+        function generateRepeaters(containerId = 'repeaters') {
+            const container = document.getElementById(`${containerId}Container`);
             container.className = isMobileView ? 'list-container' : 'grid-container';
             container.innerHTML = '';
             
@@ -694,8 +715,8 @@
             }
         }
 
-        function generateNets() {
-            const container = document.getElementById('netsContainer');
+        function generateNets(containerId = 'nets') {
+            const container = document.getElementById(`${containerId}Container`);
             container.className = isMobileView ? 'list-container' : 'grid-container';
             container.innerHTML = '';
             
@@ -750,8 +771,8 @@
             });
         }
 
-        function generateTalkgroups() {
-            const container = document.getElementById('talkgroupsContainer');
+        function generateTalkgroups(containerId = 'talkgroups') {
+            const container = document.getElementById(`${containerId}Container`);
             container.className = isMobileView ? 'list-container' : 'grid-container';
             container.innerHTML = '';
             
@@ -779,7 +800,7 @@
                                 <span class="detail-label">Status</span>
                                 <span class="detail-value">${tg.status}</span>
                             </div>
-                            ${tg.note ? `<div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(231, 76, 60, 0.1); border-radius: 4px; color: #e74c3c; font-size: 0.75rem;">⚠️ ${tg.note}</div>` : ''}
+                            ${tg.note ? `<div style="margin-top: 0.5rem; padding: 0.5rem; background: rgba(231, 76, 60, 0.1); border-radius: 4px; color: #e74c3c; font-size: var(--font-size-xs);">⚠️ ${tg.note}</div>` : ''}
                         </div>
                     `;
                     container.appendChild(item);
@@ -810,8 +831,8 @@
             });
         }
 
-        function generateResources() {
-            const container = document.getElementById('resourcesContainer');
+        function generateResources(containerId = 'resources') {
+            const container = document.getElementById(`${containerId}Container`);
             container.className = isMobileView ? 'list-container' : 'grid-container';
             container.innerHTML = '';
             
@@ -882,9 +903,7 @@
 
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
-            
             section.classList.toggle('collapsed');
-            
             localStorage.setItem(`section-${sectionId}`, section.classList.contains('collapsed') ? 'collapsed' : 'expanded');
         }
 
@@ -937,6 +956,17 @@
                 
                 localStorage.setItem('mapVisible', isMapVisible ? 'true' : 'false');
             });
+
+            // Font size toggle
+            document.getElementById('fontToggle').addEventListener('click', function() {
+                isLargeFont = !isLargeFont;
+                this.textContent = isLargeFont ? 'Normal Text' : 'Large Text';
+                this.classList.toggle('active', isLargeFont);
+                
+                document.documentElement.setAttribute('data-font-size', isLargeFont ? 'large' : 'normal');
+                
+                localStorage.setItem('fontSize', isLargeFont ? 'large' : 'normal');
+            });
         }
 
         function restoreSettings() {
@@ -960,12 +990,23 @@
                 document.getElementById('mapContainer').classList.add('hidden');
             }
 
-            // Restore section states
-            ['repeatersContent', 'netsContent', 'talkgroupsContent', 'resourcesContent'].forEach(sectionId => {
-                const state = localStorage.getItem(`section-${sectionId}`);
+            // Restore font size
+            const savedFontSize = localStorage.getItem('fontSize');
+            if (savedFontSize === 'large') {
+                isLargeFont = true;
+                document.getElementById('fontToggle').textContent = 'Normal Text';
+                document.getElementById('fontToggle').classList.add('active');
+                document.documentElement.setAttribute('data-font-size', 'large');
+            }
+
+            // Restore section states - dynamically based on loaded sections
+            sections.forEach(section => {
+                const state = localStorage.getItem(`section-${section.id}Content`);
                 if (state === 'collapsed') {
-                    const section = document.getElementById(sectionId);
-                    section.classList.add('collapsed');
+                    const sectionElement = document.getElementById(`${section.id}Content`);
+                    if (sectionElement) {
+                        sectionElement.classList.add('collapsed');
+                    }
                 }
             });
         }
@@ -973,6 +1014,7 @@
         // Initialize everything
         document.addEventListener('DOMContentLoaded', async function() {
             await loadData();
+            generateSections();
             initDarkMode();
             initToggles();
             restoreSettings();

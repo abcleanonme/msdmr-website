@@ -1,0 +1,36 @@
+{
+  "sections": [
+    {
+      "id": "repeaters",
+      "title": "DMR Repeaters", 
+      "dataSource": "repeaters",
+      "enabled": true,
+      "order": 1,
+      "description": "Local DMR repeater information and links"
+    },
+    {
+      "id": "nets",
+      "title": "Net Schedule",
+      "dataSource": "nets", 
+      "enabled": true,
+      "order": 2,
+      "description": "Scheduled amateur radio nets on the DMR network"
+    },
+    {
+      "id": "talkgroups", 
+      "title": "DMR Talk Groups",
+      "dataSource": "talkgroups",
+      "enabled": true,
+      "order": 3,
+      "description": "Available talk groups and their usage guidelines"
+    },
+    {
+      "id": "resources",
+      "title": "Essential DMR Resources", 
+      "dataSource": "resources",
+      "enabled": true,
+      "order": 4,
+      "description": "Helpful websites and tools for DMR users"
+    }
+  ]
+}

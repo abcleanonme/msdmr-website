@@ -41,5 +41,24 @@
       "status": "Private Call",
       "note": "Configure as PRIVATE CALL, not Group Call"
     }
-  ]
+  ],
+  "_example_regional_tg": {
+    "_comment": "Example regional talkgroup - remove underscore prefix to activate",
+    "id": "12345",
+    "name": "Your Regional Area",
+    "description": "Communications for your specific regional area. Include cities and usage guidelines.",
+    "type": "Regional", 
+    "timeslot": "1 or 2",
+    "status": "Static on local repeaters"
+  },
+  "_example_service_tg": {
+    "_comment": "Example service talkgroup with note - remove underscore prefix to activate", 
+    "id": "9999",
+    "name": "Your Service",
+    "description": "Special service or function description.",
+    "type": "Service",
+    "timeslot": "1",
+    "status": "Dynamic",
+    "note": "Special configuration or usage note here"
+  }
 }

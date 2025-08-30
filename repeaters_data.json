@@ -60,5 +60,21 @@
       "bmId": "314620",
       "rbId": "23841"
     }
-  ]
+  ],
+  "_example_repeater": {
+    "_comment": "Example repeater entry - remove underscore prefix to activate",
+    "id": 999,
+    "callsign": "W5XYZ",
+    "frequency": "146.520 MHz (-0.6 MHz)",
+    "colorCode": "1", 
+    "location": "Your City",
+    "county": "Your County, MS",
+    "lat": 34.000000,
+    "lng": -89.000000,
+    "description": "Description of repeater coverage and purpose",
+    "status": "On-Air",
+    "lastUpdate": "2025-08-29",
+    "bmId": "123456",
+    "rbId": "7890"
+  }
 }

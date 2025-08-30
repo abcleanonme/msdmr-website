@@ -24,5 +24,31 @@
       "time": "19:30",
       "timezone": "CST"
     }
-  ]
+  ],
+  "_example_weekly_net": {
+    "_comment": "Example weekly net - remove underscore prefix to activate",
+    "id": "example_weekly",
+    "name": "Your Weekly Net",
+    "type": "General",
+    "schedule": "Sundays at 8:00 PM CST", 
+    "talkgroup": "12345",
+    "description": "Weekly check-in net for local area operators.",
+    "recurring": "weekly",
+    "dayOfWeek": 0,
+    "time": "20:00",
+    "timezone": "CST"
+  },
+  "_example_monthly_net": {
+    "_comment": "Example monthly net - remove underscore prefix to activate",
+    "id": "example_monthly", 
+    "name": "Your Monthly Emergency Net",
+    "type": "Emergency",
+    "schedule": "First Tuesday of each month at 7:00 PM CST",
+    "talkgroup": "98765", 
+    "description": "Monthly emergency preparedness and training net.",
+    "recurring": "monthly",
+    "dayOfMonth": 1,
+    "time": "19:00", 
+    "timezone": "CST"
+  }
 }

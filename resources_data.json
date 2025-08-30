@@ -36,5 +36,12 @@
       "description": "American Radio Relay League resources",
       "url": "https://www.arrl.org/"
     }
-  ]
+  ],
+  "_example_resource": {
+    "_comment": "Example resource link - remove underscore prefix to activate",
+    "id": "example_site", 
+    "title": "Your Favorite DMR Site",
+    "description": "Brief description of what this resource provides",
+    "url": "https://example.com/"
+  }
 }
