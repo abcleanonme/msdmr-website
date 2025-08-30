@@ -177,25 +177,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: all 0.3s ease;
         }
 
         .section-header:hover {
             background: var(--bg-highlight);
+            color: var(--btn-primary);
         }
 
         .section-title {
             font-size: 1.3rem;
             font-weight: 600;
             color: var(--text-light);
+            transition: color 0.3s ease;
         }
 
-        .section-toggle {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .section-toggle.collapsed {
-            transform: rotate(-90deg);
+        .section-header:hover .section-title {
+            color: var(--btn-primary);
         }
 
         .section-content {
@@ -216,11 +214,13 @@
             padding: 0.75rem 1rem;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: background 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .mobile-view .list-item:hover {
             background: var(--bg-highlight);
+            border-left: 3px solid var(--btn-primary);
+            padding-left: calc(1rem - 3px);
         }
 
         .mobile-view .list-item:last-child {
@@ -238,6 +238,11 @@
             font-weight: 600;
             color: var(--text-light);
             font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .mobile-view .list-item:hover .item-title {
+            color: var(--btn-primary);
         }
 
         .mobile-view .item-subtitle {
@@ -245,16 +250,6 @@
             color: var(--text-secondary);
             font-family: 'SF Mono', monospace;
             margin-top: 0.2rem;
-        }
-
-        .mobile-view .item-toggle {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            transition: transform 0.3s ease;
-        }
-
-        .mobile-view .item-toggle.collapsed {
-            transform: rotate(-90deg);
         }
 
         .mobile-view .item-details {
@@ -505,7 +500,6 @@
             <div id="repeatersSection" class="list-section">
                 <div class="section-header" onclick="toggleSection('repeatersContent')">
                     <h2 class="section-title">DMR Repeaters</h2>
-                    <span class="section-toggle">🔽</span>
                 </div>
                 <div id="repeatersContent" class="section-content">
                     <div id="repeatersContainer"></div>
@@ -515,7 +509,6 @@
             <div id="netsSection" class="list-section">
                 <div class="section-header" onclick="toggleSection('netsContent')">
                     <h2 class="section-title">Net Schedule</h2>
-                    <span class="section-toggle">🔽</span>
                 </div>
                 <div id="netsContent" class="section-content">
                     <div id="netsContainer"></div>
@@ -525,7 +518,6 @@
             <div id="talkgroupsSection" class="list-section">
                 <div class="section-header" onclick="toggleSection('talkgroupsContent')">
                     <h2 class="section-title">DMR Talk Groups</h2>
-                    <span class="section-toggle">🔽</span>
                 </div>
                 <div id="talkgroupsContent" class="section-content">
                     <div id="talkgroupsContainer"></div>
@@ -535,7 +527,6 @@
             <div id="resourcesSection" class="list-section">
                 <div class="section-header" onclick="toggleSection('resourcesContent')">
                     <h2 class="section-title">Essential DMR Resources</h2>
-                    <span class="section-toggle">🔽</span>
                 </div>
                 <div id="resourcesContent" class="section-content">
                     <div id="resourcesContainer"></div>
@@ -550,6 +541,11 @@
         let isMobileView = false;
         let isMapVisible = true;
         let data = {};
+
+        // Detect if device is mobile
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        }
 
         // Load all data from JSON files
         async function loadData() {
@@ -593,6 +589,7 @@
                             <strong>Frequency:</strong> ${repeater.frequency}<br>
                             <strong>County:</strong> ${repeater.county}<br>
                             <strong>Color Code:</strong> ${repeater.colorCode}<br>
+                            <strong>BM ID:</strong> ${repeater.bmId}<br>
                             <strong>Status:</strong> ${repeater.status}
                         </div>
                         <div style="margin-top: 0.8rem; display: flex; gap: 0.5rem;">
@@ -628,9 +625,8 @@
                         <div class="item-header" onclick="toggleItem(this.parentElement)">
                             <div>
                                 <div class="item-title">${repeater.callsign} - ${repeater.location}</div>
-                                <div class="item-subtitle">${repeater.frequency}</div>
+                                <div class="item-subtitle">${repeater.frequency} • BM ID: ${repeater.bmId}</div>
                             </div>
-                            <div class="item-toggle">🔽</div>
                         </div>
                         <div class="item-details">
                             <div class="detail-row">
@@ -680,6 +676,10 @@
                                 <span class="detail-value">${repeater.colorCode}</span>
                             </div>
                             <div class="card-detail">
+                                <span class="detail-label">BM ID</span>
+                                <span class="detail-value">${repeater.bmId}</span>
+                            </div>
+                            <div class="card-detail">
                                 <span class="detail-label">Status</span>
                                 <span class="detail-value">${repeater.status}</span>
                             </div>
@@ -711,7 +711,6 @@
                                 <div class="item-title">${net.name}</div>
                                 <div class="item-subtitle">TG ${net.talkgroup}</div>
                             </div>
-                            <div class="item-toggle">🔽</div>
                         </div>
                         <div class="item-details">
                             <div class="detail-row">
@@ -766,7 +765,6 @@
                                 <div class="item-title">${tg.name}</div>
                                 <div class="item-subtitle">TG ${tg.id}</div>
                             </div>
-                            <div class="item-toggle">🔽</div>
                         </div>
                         <div class="item-details">
                             <div class="detail-row">
@@ -827,7 +825,6 @@
                                 <div class="item-title">${resource.title}</div>
                                 <div class="item-subtitle">${resource.description}</div>
                             </div>
-                            <div style="color: var(--btn-primary); font-size: 1.2rem;">→</div>
                         </div>
                     `;
                     container.appendChild(item);
@@ -885,20 +882,15 @@
 
         function toggleSection(sectionId) {
             const section = document.getElementById(sectionId);
-            const toggle = section.previousElementSibling.querySelector('.section-toggle');
             
             section.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
             
             localStorage.setItem(`section-${sectionId}`, section.classList.contains('collapsed') ? 'collapsed' : 'expanded');
         }
 
         function toggleItem(itemElement) {
-            const toggle = itemElement.querySelector('.item-toggle');
             const details = itemElement.querySelector('.item-details');
-            
             details.classList.toggle('collapsed');
-            toggle.classList.toggle('collapsed');
         }
 
         function initDarkMode() {
@@ -948,9 +940,9 @@
         }
 
         function restoreSettings() {
-            // Restore view mode
+            // Auto-detect mobile if no preference saved
             const savedView = localStorage.getItem('viewMode');
-            if (savedView === 'mobile') {
+            if (savedView === 'mobile' || (savedView === null && isMobileDevice())) {
                 isMobileView = true;
                 document.getElementById('viewToggle').textContent = 'Desktop View';
                 document.getElementById('viewToggle').classList.add('active');
@@ -973,9 +965,7 @@
                 const state = localStorage.getItem(`section-${sectionId}`);
                 if (state === 'collapsed') {
                     const section = document.getElementById(sectionId);
-                    const toggle = section.previousElementSibling.querySelector('.section-toggle');
                     section.classList.add('collapsed');
-                    toggle.classList.add('collapsed');
                 }
             });
         }
